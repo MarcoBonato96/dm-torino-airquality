@@ -1,0 +1,17 @@
+# PYTHON
+.venv/
+__pycache__/
+*.pyc
+
+# SECRETS
+.env
+*.json
+!schema.json
+
+# DBT
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
