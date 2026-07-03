@@ -1,0 +1,23 @@
+SELECT
+  station_code,
+  station,
+  station_type,
+  station_area,
+  network,
+  network_name,
+  sampling_point,
+  city,
+  city_code,
+  pollutant,
+  pollutant_code,
+  CAST(pollution_level AS FLOAT64) AS pollution_level,
+  unit,
+  aggregation_process,
+  aggregation_process_id,
+  CAST(reporting_year AS INT64) AS reporting_year,
+  CAST(data_coverage AS FLOAT64) AS data_coverage,
+  verification,
+  CAST(longitude AS FLOAT64) AS longitude,
+  CAST(latitude AS FLOAT64) AS latitude,
+  CAST(altitude AS FLOAT64) AS altitude
+FROM {{ source('raw', 'air_quality_statistics_torino') }}

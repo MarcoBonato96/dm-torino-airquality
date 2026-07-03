@@ -1,0 +1,26 @@
+name: dm_torino_airquality
+version: "1.0"
+config-version: 2
+
+profile: dm_torino_airquality
+
+model-paths:
+  - models
+
+macro-paths:
+  - macros
+
+target-path: target
+
+clean-targets:
+  - target
+
+models:
+  dm_torino_airquality:
+    staging:
+      +materialized: view
+      +schema: staging
+
+    marts:
+      +materialized: table
+      +schema: marts

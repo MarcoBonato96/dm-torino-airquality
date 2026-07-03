@@ -12,11 +12,14 @@ __pycache__/
 .venv/
 __pycache__/
 *.pyc
-'''*
+target/
+logs/
+
 
 # DBT
 .DS_Store
 Thumbs.db
+dbt_packages/
 
 # IDE
 .vscode/
