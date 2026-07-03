@@ -77,8 +77,8 @@ if __name__ == "__main__":
 
     load_info = pipeline.run(
         open_meteo_torino(
-            start_date="2024-01-01",
-            end_date="2024-01-31",
+            start_date="2022-09-15",
+            end_date="2025-09-15",
         )
     )
 

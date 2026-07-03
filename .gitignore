@@ -9,6 +9,10 @@ __pycache__/
 !schema.json
 .dlt/secrets.toml
 .dlt/
+.venv/
+__pycache__/
+*.pyc
+'''*
 
 # DBT
 .DS_Store
