@@ -8,6 +8,7 @@ __pycache__/
 *.json
 !schema.json
 .dlt/secrets.toml
+.dlt/
 
 # DBT
 .DS_Store
