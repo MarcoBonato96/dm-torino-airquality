@@ -9,3 +9,5 @@ sources:
       - name: weather_torino_hourly
 
       - name: air_quality_statistics_torino
+
+      - name: station_reverse_geocoding
