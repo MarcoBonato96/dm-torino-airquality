@@ -1,0 +1,155 @@
+﻿version: 2
+
+models:
+  - name: dim_station
+    description: Dimension table containing Torino air-quality monitoring stations.
+    columns:
+      - name: station_code
+        description: Unique station code.
+        tests:
+          - not_null
+          - unique
+
+      - name: station_type
+        description: Station type.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Traffic', 'Background']
+
+      - name: station_area
+        description: Station area.
+        tests:
+          - not_null
+
+      - name: latitude
+        description: Station latitude.
+        tests:
+          - not_null
+
+      - name: longitude
+        description: Station longitude.
+        tests:
+          - not_null
+
+  - name: fact_air_quality_annual
+    description: Annual air-quality KPI table by station and year.
+    columns:
+      - name: station_code
+        description: Monitoring station code.
+        tests:
+          - not_null
+
+      - name: reporting_year
+        description: Reporting year.
+        tests:
+          - not_null
+
+      - name: pm10_annual_mean_ugm3
+        description: Annual mean PM10 concentration.
+        tests:
+          - not_null
+
+      - name: no2_annual_mean_ugm3
+        description: Annual mean NO2 concentration.
+        tests:
+          - not_null
+
+      - name: pm10_days_above_50
+        description: Number of PM10 daily exceedance days above 50.
+        tests:
+          - not_null
+
+  - name: mart_air_quality_weather_yearly
+    description: Annual mart combining air-quality indicators with yearly weather indicators.
+    columns:
+      - name: station_code
+        description: Monitoring station code.
+        tests:
+          - not_null
+
+      - name: reporting_year
+        description: Reporting year.
+        tests:
+          - not_null
+
+      - name: weather_enrichment_success
+        description: Flag indicating whether weather enrichment was successful.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1]
+                quote: false
+
+  - name: dim_station_enriched
+    description: Station dimension enriched with reverse-geocoded address information.
+    columns:
+      - name: station_code
+        description: Unique station code.
+        tests:
+          - not_null
+          - unique
+
+      - name: display_name
+        description: Human-readable address returned by reverse geocoding.
+        tests:
+          - not_null
+
+      - name: reverse_geocoding_success
+        description: Flag indicating whether reverse geocoding succeeded.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1]
+                quote: false
+
+      - name: distance_original_geocoded_m
+        description: Distance in meters between original station coordinates and geocoded point.
+        tests:
+          - not_null
+
+  - name: dq_reverse_geocoding_quality
+    description: Quality metrics for reverse-geocoding station enrichment.
+    columns:
+      - name: total_stations
+        description: Total number of stations evaluated.
+        tests:
+          - not_null
+
+      - name: enriched_stations
+        description: Number of stations successfully enriched.
+        tests:
+          - not_null
+
+      - name: enrichment_coverage_pct
+        description: Percentage of stations successfully enriched.
+        tests:
+          - not_null
+
+      - name: missing_display_name_count
+        description: Number of stations without a returned display name.
+        tests:
+          - not_null
+
+      - name: avg_distance_m
+        description: Average distance between original and geocoded coordinates.
+        tests:
+          - not_null
+
+      - name: max_distance_m
+        description: Maximum distance between original and geocoded coordinates.
+        tests:
+          - not_null
+
+      - name: stations_within_50m_pct
+        description: Percentage of stations within 50 meters from the geocoded point.
+        tests:
+          - not_null
+
+      - name: stations_within_100m_pct
+        description: Percentage of stations within 100 meters from the geocoded point.
+        tests:
+          - not_null
