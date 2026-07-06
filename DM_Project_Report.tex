@@ -1,0 +1,566 @@
+% ==============================================================
+%  DM_Project_Report.tex  —  Air Quality Assessment in Torino
+%  Universita degli Studi di Milano-Bicocca  |  AY 2025-2026
+% ==============================================================
+\documentclass[11pt,a4paper]{article}
+
+% ---- encoding & language
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% ---- layout
+\usepackage[top=2.4cm,bottom=2.6cm,left=2.8cm,right=2.8cm]{geometry}
+\usepackage{setspace}\setstretch{1.18}
+
+% ---- colours
+\usepackage[dvipsnames,svgnames,table]{xcolor}
+\definecolor{navyblue}{HTML}{0B1F3A}
+\definecolor{accentblue}{HTML}{1D4ED8}
+\definecolor{softblue}{HTML}{DBEAFE}
+\definecolor{accentred}{HTML}{DC2626}
+\definecolor{softred}{HTML}{FEE2E2}
+\definecolor{accentgreen}{HTML}{059669}
+\definecolor{softgreen}{HTML}{D1FAE5}
+\definecolor{accentamber}{HTML}{B45309}
+\definecolor{softamber}{HTML}{FEF3C7}
+\definecolor{mutedgray}{HTML}{64748B}
+\definecolor{bordergray}{HTML}{E2E8F0}
+\definecolor{lightbg}{HTML}{F5F7FB}
+
+% ---- tables
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{colortbl}
+
+% ---- lists
+\usepackage{enumitem}
+\setlist[itemize]{topsep=4pt,itemsep=3pt,leftmargin=16pt}
+\setlist[enumerate]{topsep=4pt,itemsep=3pt,leftmargin=20pt}
+
+% ---- graphics & boxes
+\usepackage[most]{tcolorbox}
+\usepackage{tikz}
+
+% ---- hyperlinks
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=accentblue,urlcolor=accentblue,
+  pdftitle={Air Quality Assessment in Torino --- DM Report}}
+
+% ---- headers & footers
+\usepackage{fancyhdr}
+\pagestyle{fancy}\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyhead[L]{\small\color{mutedgray}Air Quality Assessment in Torino}
+\fancyhead[R]{\small\color{mutedgray}Data Management Project}
+\fancyfoot[C]{\small\color{mutedgray}\thepage}
+
+% ---- section styling
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries\color{navyblue}}{}{0em}{}
+  [\vspace{2pt}\color{bordergray}\titlerule[0.6pt]]
+\titleformat{\subsection}{\normalsize\bfseries\color{accentblue}}{}{0em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{mutedgray}}{}{0em}{}
+\titlespacing{\section}{0pt}{16pt}{8pt}
+\titlespacing{\subsection}{0pt}{12pt}{5pt}
+
+% ---- caption
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf,labelsep=period}
+
+% ---- tcolorbox styles
+\tcbset{
+  rqbox/.style={
+    enhanced,breakable,
+    colback=softblue,colframe=accentblue,
+    leftrule=4pt,toprule=0.4pt,bottomrule=0.4pt,rightrule=0.4pt,
+    left=8pt,right=8pt,top=6pt,bottom=6pt,
+    fonttitle=\small\bfseries\color{accentblue},
+    sharp corners,
+  },
+  answerbox/.style={
+    enhanced,breakable,
+    colback=softgreen,colframe=accentgreen,
+    leftrule=4pt,toprule=0.4pt,bottomrule=0.4pt,rightrule=0.4pt,
+    left=8pt,right=8pt,top=6pt,bottom=6pt,
+    fonttitle=\small\bfseries\color{accentgreen},
+    sharp corners,
+  },
+  infobox/.style={
+    enhanced,breakable,
+    colback=lightbg,colframe=bordergray,
+    boxrule=0.5pt,left=8pt,right=8pt,top=6pt,bottom=6pt,
+    sharp corners,
+  },
+}
+
+% ---- helper: inline tag
+\newcommand{\tagitem}[1]{%
+  \tcbox[on line,boxrule=0.5pt,colback=softblue,colframe=accentblue,
+    left=3pt,right=3pt,top=1pt,bottom=1pt,
+    fontupper=\tiny\bfseries\color{accentblue}]{#1}%
+}
+
+% ==============================================================
+\begin{document}
+% ==============================================================
+
+% ---- COVER PAGE
+\begin{titlepage}
+\color{white}
+\begin{tikzpicture}[remember picture,overlay]
+  \fill[navyblue] (current page.north west)
+    rectangle ([yshift=-7.6cm]current page.north east);
+  \node[anchor=north west,xshift=2.8cm,yshift=-1.4cm,
+        text=white,font=\tiny\bfseries,text width=14cm]
+    at (current page.north west)
+    {UNIVERSIT\`A DEGLI STUDI DI MILANO-BICOCCA\enspace\textbf{\textperiodcentered}\enspace DATA MANAGEMENT PROJECT};
+  \node[anchor=north west,xshift=2.8cm,yshift=-2.3cm,
+        text=white,font=\fontsize{24}{28}\selectfont\bfseries,text width=14cm]
+    at (current page.north west)
+    {Air Quality Assessment in Torino};
+  \node[anchor=north west,xshift=2.8cm,yshift=-4.1cm,
+        text=softblue,font=\normalsize,text width=13cm]
+    at (current page.north west)
+    {Annual PM10 and NO2 analysis across Traffic and Background monitoring stations in
+     Torino, enriched with yearly weather indicators and reverse-geocoded station metadata.};
+\end{tikzpicture}
+\vspace*{7.8cm}
+\color{black}
+\begin{center}
+  \tagitem{EEA DiscoData}\;\tagitem{Open-Meteo API}\;\tagitem{OSM / Nominatim}\;
+  \tagitem{BigQuery}\;\tagitem{dlt}\;\tagitem{dbt}\;\tagitem{30 dbt tests passed}
+\end{center}
+\vspace{1.2cm}
+\begin{center}
+  {\large\bfseries Data Management Project --- Report}\\[0.5em]
+  {\normalsize Course: Data Management and Data Visualization}\\[0.3em]
+  {\normalsize Universit\`a degli Studi di Milano-Bicocca (UNIMIB) \textbf{\textperiodcentered} Academic Year 2025--2026}\\[1.2em]
+  {\normalsize [Student~1] \quad [Student~2] \quad [Student~3]}\\[0.4em]
+  {\small Repository: \href{https://github.com/[repo]}{github.com/[repo]}}\\[0.3em]
+  {\small [insert final submission date]}
+\end{center}
+\end{titlepage}
+
+% ---- ABSTRACT
+\begin{tcolorbox}[infobox]
+\textbf{Abstract.}~%
+This project analyses air quality in Torino by integrating heterogeneous environmental
+datasets into a reproducible analytical pipeline. The system combines annual air-quality
+statistics from EEA DiscoData, hourly meteorological observations from Open-Meteo, and
+reverse-geocoded station metadata from Nominatim/OpenStreetMap. Data are acquired through
+automated Python dlt pipelines, stored in Google BigQuery, transformed with dbt, validated
+through 30 automated tests, and exposed through SQL queries and a Streamlit dashboard.
+The project covers all phases required by the Data Management course: acquisition, storage,
+profiling, integration, analysis, and quality improvement.
+\end{tcolorbox}
+
+\vspace{0.4cm}
+\tableofcontents
+\newpage
+
+\begin{abstract}
+This project analyzes air quality in Torino by integrating heterogeneous environmental datasets into a reproducible analytical pipeline. The system combines annual air-quality statistics from EEA DiscoData, hourly meteorological observations from Open-Meteo, and reverse-geocoded station metadata from Nominatim / OpenStreetMap. Data are acquired through automated Python pipelines, stored in Google BigQuery, transformed with dbt, validated through automated tests, and exposed through SQL queries and a Streamlit dashboard. The project addresses all phases required by the Data Management course: acquisition, storage, profiling, integration, analysis, and quality improvement. Particular attention is paid to enrichment quality measurement, especially for spatial integration, in line with the course FAQ.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% ==============================================================
+\section{Introduction}
+% ==============================================================
+
+Air pollution is one of the most significant urban environmental challenges, affecting
+public health and urban quality of life. Torino is a relevant study case because the city
+hosts both \textbf{Traffic} and \textbf{Background} monitoring stations, enabling direct
+comparison of pollutant levels by station type across multiple years.
+
+\subsection{Project objectives}
+
+\begin{enumerate}
+  \item Build a reproducible data-management pipeline that acquires, stores, transforms,
+        validates, and integrates environmental datasets from multiple sources.
+  \item Answer four research-driven questions on PM10 and NO2 patterns through SQL analysis
+        and an interactive Streamlit dashboard.
+\end{enumerate}
+
+\subsection{Research Questions}
+
+\begin{tcolorbox}[rqbox,title=RQ1 --- Descriptive]
+How do PM10 and NO2 annual concentrations differ between Traffic and Background monitoring
+stations in Torino during 2022--2024?
+\end{tcolorbox}
+\begin{tcolorbox}[rqbox,title=RQ2 --- Temporal]
+How do annual PM10 and NO2 indicators evolve between 2022 and 2024 for different station types?
+\end{tcolorbox}
+\begin{tcolorbox}[rqbox,title=RQ3 --- Exceedance analysis]
+How do PM10 exceedance days above 50~\textmu g/m\textsuperscript{3} vary across years and station types?
+\end{tcolorbox}
+\begin{tcolorbox}[rqbox,title=RQ4 --- Integration and enrichment quality]
+Can yearly weather indicators and reverse-geocoded station information be integrated into the
+analytical warehouse with measurable quality?
+\end{tcolorbox}
+
+\subsection{Scope}
+
+The project covers \textbf{4 Torino monitoring stations} for the years \textbf{2022, 2023, and 2024}.
+The analytical scope is intentionally descriptive and integrative rather than causal.
+
+% ==============================================================
+\section{Data Sources and Acquisition}
+% ==============================================================
+
+\begin{table}[h!]
+\centering
+\caption{Data sources summary}
+\small
+\begin{tabularx}{\textwidth}{@{}llllr@{}}
+\toprule
+\textbf{Source} & \textbf{Provider} & \textbf{Method} & \textbf{Raw table} & \textbf{Records} \\
+\midrule
+Air-quality statistics & EEA DiscoData         & HTTP SQL API / dlt & raw.air\_quality\_statistics\_torino & 669 \\
+Hourly weather         & Open-Meteo Historical & REST API / dlt     & raw.weather\_torino\_hourly          & 26\,328 \\
+Station geocoding      & Nominatim / OSM       & REST API / dlt     & raw.station\_reverse\_geocoding      & 4 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{EEA DiscoData}
+
+The core pollutant dataset is extracted from EEA DiscoData AirQualityStatistics via an HTTP SQL
+endpoint. The pipeline selects Torino stations with a \texttt{P1Y} (annual) aggregation process
+and loads \textbf{669 records} into BigQuery.
+
+\subsection{Open-Meteo Historical API}
+
+Hourly meteorological observations are downloaded from the Open-Meteo Historical Archive
+(\textbf{26\,328 records}). These are later aggregated yearly inside the dbt mart
+\texttt{fact\_weather\_yearly} to support weather enrichment of air-quality facts.
+
+\subsection{Nominatim / OpenStreetMap}
+
+Reverse geocoding enriches the four monitoring stations with human-readable address fields and
+measures the Haversine distance between original coordinates and the geocoded point, enabling
+explicit quality assessment of spatial integration.
+
+\subsection{Acquisition constraints}
+
+\begin{itemize}
+  \item The three sources use different schemas requiring normalisation at ingestion time.
+  \item Nominatim enforces a rate limit and requires an explicit user-agent header.
+  \item Spatial enrichment must be evaluated quantitatively, not only executed.
+\end{itemize}
+
+% ==============================================================
+\section{Storage Layer and Database Design}
+% ==============================================================
+
+\subsection{Technology choices}
+
+\begin{tcolorbox}[infobox]
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}lX@{}}
+  \textbf{Ingestion}      & Python \textbf{dlt} --- declarative pipelines with built-in BigQuery destination \\
+  \textbf{Storage}        & \textbf{Google BigQuery} --- serverless, scalable analytical DBMS \\
+  \textbf{Transformation} & \textbf{dbt Core} --- versioned SQL models, staging/mart design, declarative tests \\
+  \textbf{Dashboard}      & \textbf{Streamlit + Plotly} --- interactive Python-based presentation layer \\
+\end{tabularx}
+\end{tcolorbox}
+
+\subsection{Warehouse schema}
+
+\begin{table}[h!]
+\centering
+\caption{Warehouse layers and assets}
+\small
+\begin{tabularx}{\textwidth}{@{}llX@{}}
+\toprule
+\textbf{Layer} & \textbf{Asset} & \textbf{Description} \\
+\midrule
+\rowcolor{lightbg}
+Raw     & raw.air\_quality\_statistics\_torino & EEA annual statistics as loaded by dlt \\
+Raw     & raw.weather\_torino\_hourly          & Open-Meteo hourly observations \\
+\rowcolor{lightbg}
+Raw     & raw.station\_reverse\_geocoding      & Nominatim geocoding results \\
+Staging & stg\_air\_quality\_statistics\_torino & Cleaned and typed EEA records \\
+\rowcolor{lightbg}
+Staging & stg\_weather\_torino\_hourly         & Cleaned hourly weather data \\
+Staging & stg\_station\_reverse\_geocoding     & Cleaned geocoding records \\
+\midrule
+\rowcolor{lightbg}
+Mart    & dim\_station                         & Station dimension with coordinates \\
+Mart    & fact\_air\_quality\_annual           & Annual PM10/NO2 KPIs per station \\
+\rowcolor{lightbg}
+Mart    & mart\_station\_type\_year\_summary   & KPIs aggregated by station type and year \\
+Mart    & mart\_air\_quality\_weather\_yearly  & Air-quality facts enriched with weather \\
+\rowcolor{lightbg}
+Mart    & dim\_station\_enriched               & Stations enriched with geocoded address \\
+Mart    & dq\_reverse\_geocoding\_quality      & Spatial integration quality metrics \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ==============================================================
+\section{Data Profiling and Data Quality}
+% ==============================================================
+
+\subsection{Automated quality checks with dbt}
+
+\begin{table}[h!]
+\centering
+\caption{dbt test coverage summary}
+\small
+\rowcolors{2}{lightbg}{white}
+\begin{tabularx}{\textwidth}{@{}lllX@{}}
+\toprule
+\textbf{Dimension}   & \textbf{dbt test}          & \textbf{Applied to}             & \textbf{Result} \\
+\midrule
+Completeness         & \texttt{not\_null}         & All key columns in every mart   & \textcolor{accentgreen}{\bfseries PASS} \\
+Uniqueness           & \texttt{unique}            & station\_code, composite keys    & \textcolor{accentgreen}{\bfseries PASS} \\
+Validity             & \texttt{accepted\_values} & station\_type, enrichment flags  & \textcolor{accentgreen}{\bfseries PASS} \\
+Enrichment success   & \texttt{accepted\_values} & weather\_enrichment\_success     & \textcolor{accentgreen}{\bfseries PASS} \\
+\midrule
+\multicolumn{3}{l}{\textbf{Total}} & \textbf{30 / 30 tests passed} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Enrichment quality metrics (FAQ 7 and FAQ 9)}
+
+\begin{tcolorbox}[answerbox,title=Measured quality evidence]
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}ll@{}}
+Weather enrichment success        & \textbf{100\%} of station-year records \\
+Geocoding station coverage        & \textbf{100\%} (4~/ 4 stations enriched) \\
+Average geocoding distance        & \textbf{27.09~m} \\
+Maximum geocoding distance        & \textbf{55.34~m} \\
+Stations within 50~m              & \textbf{75\%} (3 / 4) \\
+Stations within 100~m             & \textbf{100\%} (4 / 4) \\
+\end{tabular}
+\end{tcolorbox}
+
+\section{Data Integration and Enrichment}
+
+\subsection{Weather Enrichment}
+
+The first integration task links annual air-quality indicators with yearly weather summaries. The resulting mart, \texttt{mart\_air\_quality\_weather\_yearly}, makes it possible to analyze pollutant behavior in the context of meteorological conditions.
+
+The integration is automated through the warehouse pipeline rather than manual spreadsheet joins. This directly satisfies the course requirement that integration must be automated.
+
+\subsection{Spatial Enrichment}
+
+The second integration task enriches station metadata with reverse-geocoded information from Nominatim / OpenStreetMap. The resulting \texttt{dim\_station\_enriched} table contains human-readable address fields and the measured distance between original coordinates and the geocoded point.
+
+This enrichment is particularly aligned with the FAQ suggestion to pay attention to spatial integration cases.
+
+\subsection{Integration Outcome}
+
+The integration outcome is positive on both dimensions:
+
+\begin{itemize}
+  \item weather enrichment succeeded for all analytical records
+  \item reverse geocoding enriched all stations
+  \item the geocoding error remained within a small and interpretable range
+\end{itemize}
+
+Therefore, the project satisfies the requirement of integrating at least two datasets and measuring the related enrichment error.
+
+% ==============================================================
+\section{Analysis and Results}
+% ==============================================================
+
+\subsection{RQ1 --- Traffic vs Background concentrations}
+
+\begin{tcolorbox}[rqbox,title=Research Question 1]
+How do PM10 and NO2 annual concentrations differ between Traffic and Background stations?
+\end{tcolorbox}
+
+\begin{table}[h!]
+\centering
+\caption{Annual mean concentrations by station type and year (\textmu g/m\textsuperscript{3})}
+\small
+\rowcolors{2}{lightbg}{white}
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+\textbf{Station type} & \textbf{Year} & \textbf{Avg NO2} & \textbf{Avg PM10} & \textbf{Exceedance days} & \textbf{Stations} \\
+\midrule
+Background & 2022 & 29.35 & 30.21 &  47.5 & 2 \\
+Traffic    & 2022 & 44.69 & 35.10 &  71.5 & 2 \\
+Background & 2023 & 29.38 & 25.41 &  28.0 & 2 \\
+Traffic    & 2023 & 39.16 & 32.23 &  58.0 & 2 \\
+Background & 2024 & 27.77 & 22.47 &  39.0 & 2 \\
+Traffic    & 2024 & 38.59 & 28.71 &  44.5 & 2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{tcolorbox}[answerbox,title=Direct answer --- RQ1]
+Traffic stations show higher annual PM10 and NO2 concentrations than Background stations in
+every observed year. In 2024, NO2 is 38.59~\textmu g/m\textsuperscript{3} for Traffic versus
+27.77~\textmu g/m\textsuperscript{3} for Background, a gap of 10.82~\textmu g/m\textsuperscript{3}.
+\end{tcolorbox}
+
+\subsection{RQ2 --- Temporal evolution}
+
+\begin{tcolorbox}[rqbox,title=Research Question 2]
+How do annual PM10 and NO2 indicators evolve between 2022 and 2024?
+\end{tcolorbox}
+
+\begin{table}[h!]
+\centering
+\caption{Year-over-year changes by station type}
+\small
+\rowcolors{2}{lightbg}{white}
+\begin{tabular}{@{}llrrrrrr@{}}
+\toprule
+\textbf{Type} & \textbf{Year} & \textbf{PM10} & \textbf{NO2} & \textbf{$\Delta$PM10} & \textbf{$\Delta$NO2} & \textbf{$\Delta$PM10\%} & \textbf{$\Delta$NO2\%} \\
+\midrule
+Background & 2023 & 25.41 & 29.38 & $-$4.80 & $+$0.03 & $-$15.9\% & $+$0.1\% \\
+Background & 2024 & 22.47 & 27.77 & $-$2.94 & $-$1.61 & $-$11.6\% & $-$5.5\% \\
+Traffic    & 2023 & 32.23 & 39.16 & $-$2.87 & $-$5.53 & $-$8.2\%  & $-$12.4\% \\
+Traffic    & 2024 & 28.71 & 38.59 & $-$3.52 & $-$0.57 & $-$10.9\% & $-$1.5\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{tcolorbox}[answerbox,title=Direct answer --- RQ2]
+PM10 decreases for both Traffic and Background station types across the period analysed.
+NO2 also declines but remains comparatively high at Traffic stations, close to the EU annual
+limit of 40~\textmu g/m\textsuperscript{3}.
+\end{tcolorbox}
+
+\subsection{RQ3 --- PM10 exceedance days}
+
+\begin{tcolorbox}[rqbox,title=Research Question 3]
+How do PM10 exceedance days above 50~\textmu g/m\textsuperscript{3} vary across years and station types?
+\end{tcolorbox}
+
+\begin{table}[h!]
+\centering
+\caption{PM10 exceedance days per station and year (EU limit: 35 days/year)}
+\small
+\rowcolors{2}{lightbg}{white}
+\begin{tabular}{@{}llrrr@{}}
+\toprule
+\textbf{Station ID} & \textbf{Type} & \textbf{2022} & \textbf{2023} & \textbf{2024} \\
+\midrule
+IT0469A & Traffic    & 57 & 53 & 34 \\
+IT0470A & Traffic    & 86 & 63 & 55 \\
+IT1877A & Background & 58 & 37 & 41 \\
+IT2168A & Background & 37 & 19 & 37 \\
+\midrule
+\textbf{Traffic avg}    & & \textbf{71.5} & \textbf{58.0} & \textbf{44.5} \\
+\textbf{Background avg} & & \textbf{47.5} & \textbf{28.0} & \textbf{39.0} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{tcolorbox}[answerbox,title=Direct answer --- RQ3]
+PM10 exceedance days are higher for Traffic stations in all observed years: 71.5 vs 47.5 in 2022,
+58.0 vs 28.0 in 2023, and 44.5 vs 39.0 in 2024. Traffic stations exceed the EU maximum of 35
+days every year, while Background stations exceed it in 2022 and 2024 but stay below it in 2023.
+\end{tcolorbox}
+
+\subsection{RQ4 --- Integration and enrichment quality}
+
+\begin{tcolorbox}[rqbox,title=Research Question 4]
+Can yearly weather and reverse-geocoded station information be integrated with measurable quality?
+\end{tcolorbox}
+
+\begin{tcolorbox}[answerbox,title=Direct answer --- RQ4]
+Yes. Weather enrichment succeeded for all station-year records (100\%) and reverse-geocoded
+station enrichment achieved 100\% coverage. The maximum geocoding distance is 55.34~m.
+The dbt quality layer completed successfully with 30 tests passed.
+\end{tcolorbox}
+
+% ==============================================================
+\section{Compliance Summary}
+% ==============================================================
+
+\begin{table}[h!]
+\centering
+\caption{EU and WHO regulatory compliance}
+\small
+\rowcolors{2}{lightbg}{white}
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Metric} & \textbf{Limit} & \textbf{Traffic} & \textbf{Background} \\
+\midrule
+NO2 annual mean      & EU 40\,\textmu g/m\textsuperscript{3} & Near/above (2022)       & Compliant all years \\
+PM10 annual mean     & EU 40\,\textmu g/m\textsuperscript{3} & Compliant all years     & Compliant all years \\
+PM10 exceedance days & EU $\leq$35 days/year                 & Exceeds all three years & Exceeds 2022 and 2024 \\
+NO2 annual mean      & WHO 10\,\textmu g/m\textsuperscript{3}& Exceeds all years       & Exceeds all years \\
+PM10 annual mean     & WHO 15\,\textmu g/m\textsuperscript{3}& Exceeds all years       & Exceeds all years \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ==============================================================
+\section{Reproducibility and Deployment}
+% ==============================================================
+
+\begin{table}[h!]
+\centering
+\caption{Implemented assets}
+\small
+\begin{tabularx}{\textwidth}{@{}lX@{}}
+\toprule
+\textbf{Category} & \textbf{Assets} \\
+\midrule
+dlt pipelines   & open\_meteo.py, eea\_discodata.py, station\_reverse\_geocoding.py \\
+Raw tables      & raw.weather\_torino\_hourly, raw.air\_quality\_statistics\_torino, raw.station\_reverse\_geocoding \\
+dbt staging     & stg\_weather\_torino\_hourly, stg\_air\_quality\_statistics\_torino, stg\_station\_reverse\_geocoding \\
+dbt marts       & dim\_station, fact\_air\_quality\_annual, mart\_station\_type\_year\_summary, \newline
+                  fact\_weather\_yearly, mart\_air\_quality\_weather\_yearly, dim\_station\_enriched, dq\_reverse\_geocoding\_quality \\
+SQL queries     & annual\_means\_by\_station.sql, annual\_means\_by\_station\_type.sql, pm10\_exceedances\_by\_station.sql \ldots \\
+Dashboard       & Streamlit app at \texttt{dashboard\_streamlit\_v2/} \\
+Quality         & 30 dbt tests passed \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The project is fully reproducible. All environment variables, credentials, and commands required
+to run the complete pipeline are documented in the accompanying \textit{Operational Guide}.
+
+% ==============================================================
+\section{Limitations and Future Work}
+% ==============================================================
+
+\begin{tcolorbox}[infobox]
+\textbf{Limitations:}
+\begin{itemize}
+  \item Annual air-quality indicators limit analysis to year-level trends.
+  \item The station scope is limited to the four Torino stations available in EEA DiscoData.
+  \item The analysis is descriptive; causal inference would require additional data.
+\end{itemize}
+\textbf{Future improvements:}
+\begin{itemize}
+  \item Incorporate daily ARPA data for higher temporal resolution.
+  \item Extend the geographic scope to other Italian cities.
+  \item Integrate road traffic or land-use spatial datasets.
+  \item Track data-quality metrics historically through a monitoring mart.
+\end{itemize}
+\end{tcolorbox}
+
+% ==============================================================
+\section{Conclusion}
+% ==============================================================
+
+This project demonstrates a complete end-to-end data-management workflow: three automated
+API-based ingestion pipelines, a structured analytical warehouse in BigQuery, dbt transformations
+and 30 schema tests, two forms of automated enrichment with measured quality, six SQL analytical
+queries, and a Streamlit dashboard aligned with the four research questions.
+
+\textbf{Main findings:}
+\begin{itemize}
+  \item Traffic stations consistently exhibit worse air-quality indicators than Background stations.
+  \item PM10 annual means decrease over 2022--2024 for both station types.
+  \item PM10 exceedance days remain above the EU limit at Traffic stations in every observed year.
+  \item Weather and spatial enrichment integrate with full coverage and controlled error.
+  \item All stations exceed WHO AQG 2021 thresholds for both PM10 and NO2.
+\end{itemize}
+
+\end{document}

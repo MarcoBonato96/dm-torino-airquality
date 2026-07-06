@@ -1,0 +1,244 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\geometry{margin=2.5cm}
+\setstretch{1.12}
+\setlist[itemize]{topsep=4pt,itemsep=3pt,leftmargin=18pt}
+\hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  columns=fullflexible
+}
+
+\title{Operational Guide\\\large Air Quality Assessment in Torino}
+\author{[Student 1] \and [Student 2] \and [Student 3]}
+\date{Academic Year 2025-2026}
+
+\begin{document}
+
+\maketitle
+
+\section{Purpose}
+
+This document explains how to reproduce the project deliverables required by the Data Management course: data acquisition, storage, transformation, quality checks, analytical queries, and dashboard execution.
+
+\section{Repository Structure}
+
+Main folders:
+
+\begin{itemize}
+  \item \texttt{dlt\_pipelines/}: Python ingestion pipelines
+  \item \texttt{dbt\_project/}: dbt models and tests
+  \item \texttt{queries/}: analytical SQL queries
+  \item \texttt{dashboard\_streamlit\_v2/}: Streamlit dashboard
+\end{itemize}
+
+\section{Prerequisites}
+
+Required software:
+
+\begin{itemize}
+  \item Python 3.13 or compatible version available in the local virtual environment
+  \item Google Cloud project with BigQuery enabled
+  \item dbt Core with the BigQuery adapter
+  \item a valid service account key for BigQuery access
+\end{itemize}
+
+\section{Credentials and Environment Variables}
+
+The project requires Google Cloud credentials.
+
+Expected variables:
+
+\begin{itemize}
+  \item \texttt{GOOGLE\_APPLICATION\_CREDENTIALS}
+  \item \texttt{GCP\_PROJECT\_ID}
+  \item optionally \texttt{BQ\_MARTS\_DATASET} if a dataset other than \texttt{staging\_marts} is used
+\end{itemize}
+
+Recommended PowerShell setup:
+
+\begin{lstlisting}[language={}]
+$env:GOOGLE_APPLICATION_CREDENTIALS = "C:\Users\Pc\gcp-keys\dlt-loader-key.json"
+$env:GCP_PROJECT_ID = "dm-torino-airquality"
+\end{lstlisting}
+
+The dashboard also supports a fallback credential path at:
+
+\begin{lstlisting}[language={}]
+%USERPROFILE%\gcp-keys\dlt-loader-key.json
+\end{lstlisting}
+
+\section{Python Environment}
+
+From the project root, use the existing virtual environment:
+
+\begin{lstlisting}[language={}]
+\.venv\Scripts\python.exe --version
+\end{lstlisting}
+
+If needed, install project dependencies for the dashboard layer:
+
+\begin{lstlisting}[language={}]
+\.venv\Scripts\pip.exe install -r dashboard_streamlit_v2\dashboard_streamlit_v2\requirements.txt
+\end{lstlisting}
+
+\section{Data Acquisition}
+
+Run the three dlt pipelines from the project root.
+
+\subsection{Open-Meteo}
+
+\begin{lstlisting}[language={}]
+\.venv\Scripts\python.exe dlt_pipelines\open_meteo.py
+\end{lstlisting}
+
+\subsection{EEA DiscoData}
+
+\begin{lstlisting}[language={}]
+\.venv\Scripts\python.exe dlt_pipelines\eea_discodata.py
+\end{lstlisting}
+
+\subsection{Reverse Geocoding}
+
+\begin{lstlisting}[language={}]
+\.venv\Scripts\python.exe dlt_pipelines\station_reverse_geocoding.py
+\end{lstlisting}
+
+Expected raw outputs:
+
+\begin{itemize}
+  \item \texttt{raw.air\_quality\_statistics\_torino}
+  \item \texttt{raw.weather\_torino\_hourly}
+  \item \texttt{raw.station\_reverse\_geocoding}
+\end{itemize}
+
+\section{Transformation Layer with dbt}
+
+Move into the dbt project and run transformations and tests.
+
+\begin{lstlisting}[language={}]
+Set-Location dbt_project
+..\.venv\Scripts\dbt.exe run
+..\.venv\Scripts\dbt.exe test
+\end{lstlisting}
+
+Expected result:
+
+\begin{itemize}
+  \item staging and mart models materialized successfully
+  \item 30 dbt tests passed
+\end{itemize}
+
+Main analytical outputs:
+
+\begin{itemize}
+  \item \texttt{staging\_marts.fact\_air\_quality\_annual}
+  \item \texttt{staging\_marts.mart\_station\_type\_year\_summary}
+  \item \texttt{staging\_marts.mart\_air\_quality\_weather\_yearly}
+  \item \texttt{staging\_marts.dim\_station\_enriched}
+  \item \texttt{staging\_marts.dq\_reverse\_geocoding\_quality}
+\end{itemize}
+
+\section{Analytical Queries}
+
+The project includes several SQL files in the \texttt{queries/} folder. For example, from PowerShell:
+
+\begin{lstlisting}[language={}]
+Get-Content -Raw .\queries\annual_means_by_station.sql | bq query --use_legacy_sql=false
+\end{lstlisting}
+
+Other available queries include:
+
+\begin{itemize}
+  \item \texttt{annual\_means\_by\_station\_type.sql}
+  \item \texttt{air\_quality\_station\_year\_summary.sql}
+  \item \texttt{pm10\_exceedances\_by\_station.sql}
+  \item \texttt{pm10\_exceedances\_by\_station\_type.sql}
+\end{itemize}
+
+\section{Dashboard Execution}
+
+The outer dashboard folder contains a launcher so the dashboard can be started with a simple command.
+
+From the project root:
+
+\begin{lstlisting}[language={}]
+Set-Location dashboard_streamlit_v2
+..\.venv\Scripts\streamlit.exe run app.py
+\end{lstlisting}
+
+Alternative full-path command:
+
+\begin{lstlisting}[language={}]
+\.venv\Scripts\streamlit.exe run dashboard_streamlit_v2\dashboard_streamlit_v2\app.py
+\end{lstlisting}
+
+Expected local URL:
+
+\begin{lstlisting}[language={}]
+http://localhost:8501
+\end{lstlisting}
+
+\section{Troubleshooting}
+
+\subsection{Missing Google Credentials}
+
+Symptom: \texttt{DefaultCredentialsError} when opening the dashboard or running pipelines.
+
+Resolution:
+
+\begin{itemize}
+  \item verify \texttt{GOOGLE\_APPLICATION\_CREDENTIALS}
+  \item verify that the service account key file exists
+  \item verify \texttt{GCP\_PROJECT\_ID}
+\end{itemize}
+
+\subsection{Wrong Dashboard Path}
+
+Symptom: \texttt{streamlit run app.py} fails from the wrong folder.
+
+Resolution:
+
+\begin{itemize}
+  \item move to the outer \texttt{dashboard\_streamlit\_v2} folder and run the launcher
+\end{itemize}
+
+\subsection{dbt or BigQuery Errors}
+
+Recommended checks:
+
+\begin{itemize}
+  \item confirm BigQuery billing and permissions
+  \item confirm dbt profile connectivity
+  \item inspect \texttt{dbt\_project/target/} and \texttt{dbt\_project/logs/}
+\end{itemize}
+
+\section{Deliverables Checklist}
+
+Before submission, ensure that the shared folder contains:
+
+\begin{itemize}
+  \item project report in PDF or LaTeX source form
+  \item project presentation in PDF or LaTeX source form
+  \item operational guide
+  \item all project code
+  \item data or instructions to reproduce the data pipeline
+\end{itemize}
+
+This checklist is aligned with the Data Management FAQ on project documentation and submission.
+
+\end{document}
