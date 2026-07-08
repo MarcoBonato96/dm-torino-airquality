@@ -1,31 +1,860 @@
+% =================================================================
+%  Operational_Guide.tex
+%  Air Quality Assessment in Torino
+%  Universita degli Studi di Milano-Bicocca  |  AY 2025-2026
+%
+%  This document contains all information required to reproduce
+%  the project from scratch on a clean machine.
+% =================================================================
 \documentclass[11pt,a4paper]{article}
 
+% ---- encoding & language
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
 \usepackage{lmodern}
-\usepackage{geometry}
-\usepackage{setspace}
+\usepackage{microtype}
+
+% ---- layout
+\usepackage[top=2.4cm,bottom=2.6cm,left=2.8cm,right=2.8cm]{geometry}
+\usepackage{setspace}\setstretch{1.18}
+
+% ---- colours
+\usepackage[dvipsnames,svgnames,table]{xcolor}
+\definecolor{navyblue}{HTML}{0B1F3A}
+\definecolor{accentblue}{HTML}{1D4ED8}
+\definecolor{softblue}{HTML}{DBEAFE}
+\definecolor{accentgreen}{HTML}{059669}
+\definecolor{softgreen}{HTML}{D1FAE5}
+\definecolor{accentred}{HTML}{DC2626}
+\definecolor{softred}{HTML}{FEE2E2}
+\definecolor{accentamber}{HTML}{B45309}
+\definecolor{softamber}{HTML}{FEF3C7}
+\definecolor{mutedgray}{HTML}{64748B}
+\definecolor{bordergray}{HTML}{E2E8F0}
+\definecolor{lightbg}{HTML}{F5F7FB}
+\definecolor{codebg}{HTML}{1E293B}
+\definecolor{codetext}{HTML}{E2E8F0}
+\definecolor{codekw}{HTML}{93C5FD}
+\definecolor{codestring}{HTML}{86EFAC}
+\definecolor{codecomment}{HTML}{94A3B8}
+
+% ---- tables
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{colortbl}
+
+% ---- lists
 \usepackage{enumitem}
-\usepackage{hyperref}
+\setlist[itemize]{topsep=4pt,itemsep=3pt,leftmargin=16pt}
+\setlist[enumerate]{topsep=4pt,itemsep=3pt,leftmargin=20pt}
+
+% ---- code listings
 \usepackage{listings}
-\usepackage{xcolor}
 
-\geometry{margin=2.5cm}
-\setstretch{1.12}
-\setlist[itemize]{topsep=4pt,itemsep=3pt,leftmargin=18pt}
-\hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue}
-
-\lstset{
-  basicstyle=\ttfamily\small,
+\lstdefinestyle{shell}{
+  backgroundcolor=\color{codebg},
+  basicstyle=\ttfamily\small\color{codetext},
+  keywordstyle=\color{codekw}\bfseries,
+  stringstyle=\color{codestring},
+  commentstyle=\color{codecomment}\itshape,
   breaklines=true,
+  breakatwhitespace=true,
   frame=single,
-  columns=fullflexible
+  framerule=0pt,
+  rulecolor=\color{codebg},
+  xleftmargin=10pt,
+  xrightmargin=10pt,
+  aboveskip=6pt,
+  belowskip=6pt,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  tabsize=2,
 }
 
-\title{Operational Guide\\\large Air Quality Assessment in Torino}
-\author{[Student 1] \and [Student 2] \and [Student 3]}
-\date{Academic Year 2025-2026}
+\lstdefinestyle{sql}{
+  backgroundcolor=\color{codebg},
+  basicstyle=\ttfamily\small\color{codetext},
+  keywordstyle=\color{codekw}\bfseries,
+  stringstyle=\color{codestring},
+  commentstyle=\color{codecomment}\itshape,
+  morekeywords={SELECT,FROM,WHERE,ORDER,BY,AND,IN,BETWEEN,AS,DISTINCT,
+                WITH,JOIN,ON,GROUP,HAVING,LIMIT,INSERT,UPDATE,DELETE,
+                CREATE,TABLE,VIEW,INDEX,DROP,REPLACE,INTO},
+  breaklines=true,
+  frame=single,
+  framerule=0pt,
+  rulecolor=\color{codebg},
+  xleftmargin=10pt,
+  xrightmargin=10pt,
+  aboveskip=6pt,
+  belowskip=6pt,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  tabsize=2,
+}
+
+% ---- boxes
+\usepackage[most]{tcolorbox}
+\tcbset{
+  infobox/.style={
+    enhanced,breakable,
+    colback=lightbg,colframe=bordergray,
+    boxrule=0.5pt,left=8pt,right=8pt,top=6pt,bottom=6pt,
+    sharp corners,
+  },
+  warnbox/.style={
+    enhanced,breakable,
+    colback=softamber,colframe=accentamber,
+    leftrule=4pt,toprule=0.4pt,bottomrule=0.4pt,rightrule=0.4pt,
+    left=8pt,right=8pt,top=6pt,bottom=6pt,
+    fonttitle=\small\bfseries\color{accentamber},
+    sharp corners,
+  },
+  successbox/.style={
+    enhanced,breakable,
+    colback=softgreen,colframe=accentgreen,
+    leftrule=4pt,toprule=0.4pt,bottomrule=0.4pt,rightrule=0.4pt,
+    left=8pt,right=8pt,top=6pt,bottom=6pt,
+    fonttitle=\small\bfseries\color{accentgreen},
+    sharp corners,
+  },
+  errorbox/.style={
+    enhanced,breakable,
+    colback=softred,colframe=accentred,
+    leftrule=4pt,toprule=0.4pt,bottomrule=0.4pt,rightrule=0.4pt,
+    left=8pt,right=8pt,top=6pt,bottom=6pt,
+    fonttitle=\small\bfseries\color{accentred},
+    sharp corners,
+  },
+  stepbox/.style={
+    enhanced,
+    colback=softblue,colframe=accentblue,
+    leftrule=4pt,toprule=0.3pt,bottomrule=0.3pt,rightrule=0.3pt,
+    left=8pt,right=8pt,top=5pt,bottom=5pt,
+    fonttitle=\small\bfseries\color{accentblue},
+    sharp corners,
+  },
+}
+
+% ---- hyperlinks
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,linkcolor=accentblue,urlcolor=accentblue,
+  pdftitle={Operational Guide --- Air Quality Assessment in Torino},
+}
+
+% ---- headers / footers
+\usepackage{fancyhdr}
+\pagestyle{fancy}\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyhead[L]{\small\color{mutedgray}Operational Guide — Air Quality Assessment in Torino}
+\fancyhead[R]{\small\color{mutedgray}Data Management Project}
+\fancyfoot[C]{\small\color{mutedgray}\thepage}
+
+% ---- section styling
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries\color{navyblue}}{}{0em}{}
+  [\vspace{2pt}\color{bordergray}\titlerule[0.6pt]]
+\titleformat{\subsection}{\normalsize\bfseries\color{accentblue}}{}{0em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{mutedgray}}{}{0em}{}
+\titlespacing{\section}{0pt}{16pt}{8pt}
+\titlespacing{\subsection}{0pt}{12pt}{5pt}
+
+% ---- caption
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf,labelsep=period}
+
+% ---- step counter helper
+\newcounter{stepnum}[section]
+\newcommand{\step}[1]{%
+  \stepcounter{stepnum}%
+  \begin{tcolorbox}[stepbox,title=Step~\thestepnum\quad#1]%
+}
+\newcommand{\endstep}{\end{tcolorbox}}
+
+% =================================================================
+\begin{document}
+% =================================================================
+
+% ---- COVER PAGE
+\begin{titlepage}
+\color{white}
+\begin{tikzpicture}[remember picture,overlay]
+  \fill[navyblue] (current page.north west)
+    rectangle ([yshift=-7.6cm]current page.north east);
+  \node[anchor=north west,xshift=2.8cm,yshift=-1.4cm,
+        text=white,font=\tiny\bfseries,text width=14cm]
+    at (current page.north west)
+    {UNIVERSIT\`A DEGLI STUDI DI MILANO-BICOCCA\enspace\textperiodcentered\enspace DATA MANAGEMENT PROJECT};
+  \node[anchor=north west,xshift=2.8cm,yshift=-2.3cm,
+        text=white,font=\fontsize{22}{26}\selectfont\bfseries]
+    at (current page.north west)
+    {Operational Guide};
+  \node[anchor=north west,xshift=2.8cm,yshift=-3.4cm,
+        text=softblue,font=\large]
+    at (current page.north west)
+    {Air Quality Assessment in Torino};
+  \node[anchor=north west,xshift=2.8cm,yshift=-4.4cm,
+        text=softblue!70,font=\normalsize,text width=13cm]
+    at (current page.north west)
+    {Step-by-step guide to reproduce the complete pipeline from scratch:
+     acquisition, storage, transformation, quality checks, SQL analysis,
+     and dashboard execution.};
+\end{tikzpicture}
+\usepackage{tikz}
+\vspace*{7.8cm}
+\color{black}
+\vspace{1.2cm}
+\begin{center}
+  {\normalsize [Student~1] \quad [Student~2] \quad [Student~3]}\\[0.4em]
+  {\normalsize Universit\`a degli Studi di Milano-Bicocca (UNIMIB)}\\[0.3em]
+  {\normalsize Academic Year 2025--2026}\\[0.4em]
+  {\small Repository: \href{https://github.com/[repo]}{github.com/[repo]}}
+\end{center}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% =================================================================
+\section{Purpose and Scope}
+% =================================================================
+
+This guide contains all information required to reproduce the project
+\textit{Air Quality Assessment in Torino} on a clean machine.
+It covers every operational phase in order:
+
+\begin{enumerate}
+  \item Prerequisites and local environment setup
+  \item Google Cloud Platform (GCP) configuration
+  \item Credential management
+  \item Data acquisition via dlt pipelines
+  \item Data transformation and quality checks via dbt
+  \item Analytical SQL queries
+  \item Streamlit dashboard execution
+  \item Troubleshooting reference
+\end{enumerate}
+
+\begin{tcolorbox}[infobox]
+\textbf{Reproducibility guarantee.}
+All commands in this guide have been tested on Windows 11 with PowerShell 5.1
+and Python~3.13.9 inside a local \texttt{.venv} virtual environment.
+The GCP project identifier is \texttt{dm-torino-airquality}.
+\end{tcolorbox}
+
+% =================================================================
+\section{Repository Structure}
+% =================================================================
+
+\begin{table}[h!]
+\centering
+\caption{Repository layout}
+\small
+\begin{tabularx}{\textwidth}{@{}lX@{}}
+\toprule
+\textbf{Path} & \textbf{Description} \\
+\midrule
+\rowcolor{lightbg}
+\texttt{dlt\_pipelines/} & Three Python ingestion pipelines (dlt) \\
+\texttt{dbt\_project/}   & dbt models, macros, schema tests, and compiled output \\
+\rowcolor{lightbg}
+\texttt{queries/}        & Standalone SQL analytical queries \\
+\texttt{dashboard\_streamlit\_v2/} & Streamlit dashboard application \\
+\rowcolor{lightbg}
+\texttt{.env}            & Local environment variables (not committed) \\
+\texttt{.venv/}          & Python virtual environment (not committed) \\
+\rowcolor{lightbg}
+\texttt{DM\_Project\_Report.tex}       & Project report (LaTeX) \\
+\texttt{DM\_Project\_Presentation.tex} & Project presentation — Beamer slides (LaTeX) \\
+\rowcolor{lightbg}
+\texttt{Operational\_Guide.tex}        & This document (LaTeX) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% =================================================================
+\section{Prerequisites}
+% =================================================================
+
+\subsection{Required software}
+
+\begin{table}[h!]
+\centering
+\caption{Software dependencies}
+\small
+\rowcolors{2}{lightbg}{white}
+\begin{tabularx}{\textwidth}{@{}llX@{}}
+\toprule
+\textbf{Tool} & \textbf{Version} & \textbf{Purpose} \\
+\midrule
+Python           & 3.13.x          & Runtime for all pipelines and dashboard \\
+pip              & latest          & Python package manager \\
+Git              & any recent      & Version control \\
+Google Cloud SDK & any recent      & \texttt{gcloud} CLI and \texttt{bq} CLI \\
+dlt              & 1.28.1+         & Data ingestion pipelines \\
+dbt Core         & 1.8.x           & Data transformation layer \\
+dbt-bigquery     & matching dbt    & BigQuery adapter for dbt \\
+Streamlit        & 1.36+           & Dashboard application server \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Python virtual environment}
+
+From the project root, create and activate the virtual environment:
+
+\begin{lstlisting}[style=shell]
+# Create
+python -m venv .venv
+
+# Activate (PowerShell)
+.\.venv\Scripts\Activate.ps1
+
+# If execution policy blocks the script:
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+\end{lstlisting}
+
+Install all required packages:
+
+\begin{lstlisting}[style=shell]
+pip install dlt[bigquery] dbt-bigquery python-dotenv requests
+pip install streamlit pandas plotly google-cloud-bigquery db-dtypes pyarrow
+\end{lstlisting}
+
+\begin{tcolorbox}[warnbox,title=Note on execution policy]
+On Windows, PowerShell may block \texttt{.ps1} script execution.
+Run \texttt{Set-ExecutionPolicy -Scope CurrentUser RemoteSigned} once before activating the virtual environment.
+\end{tcolorbox}
+
+% =================================================================
+\section{Google Cloud Platform Setup}
+% =================================================================
+
+\subsection{Project and BigQuery}
+
+\begin{lstlisting}[style=shell]
+# Login and select project
+gcloud auth login
+gcloud config set project dm-torino-airquality
+
+# Verify
+gcloud config list
+
+# Create the raw dataset (first time only)
+bq mk --location=europe-west8 --dataset raw
+
+# Verify datasets
+bq ls
+\end{lstlisting}
+
+\subsection{Service account}
+
+\begin{lstlisting}[style=shell]
+# Create service account
+gcloud iam service-accounts create dlt-loader `
+  --description="Service account for dlt data ingestion" `
+  --display-name="dlt loader"
+
+# Assign BigQuery roles
+$SA = "dlt-loader@dm-torino-airquality.iam.gserviceaccount.com"
+gcloud projects add-iam-policy-binding dm-torino-airquality `
+  --member="serviceAccount:$SA" --role="roles/bigquery.dataEditor"
+gcloud projects add-iam-policy-binding dm-torino-airquality `
+  --member="serviceAccount:$SA" --role="roles/bigquery.jobUser"
+
+# Generate JSON key
+New-Item -ItemType Directory -Force -Path "$HOME\gcp-keys"
+gcloud iam service-accounts keys create `
+  "$HOME\gcp-keys\dlt-loader-key.json" `
+  --iam-account="$SA"
+\end{lstlisting}
+
+\begin{table}[h!]
+\centering
+\caption{GCP configuration reference}
+\small
+\rowcolors{2}{lightbg}{white}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Parameter} & \textbf{Value} \\
+\midrule
+GCP Project ID    & \texttt{dm-torino-airquality} \\
+Region / location & \texttt{europe-west8} \\
+Raw dataset       & \texttt{raw} \\
+Transformed dataset & \texttt{staging\_marts} \\
+Service account   & \texttt{dlt-loader} \\
+Key file path     & \texttt{\%USERPROFILE\%\textbackslash gcp-keys\textbackslash dlt-loader-key.json} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% =================================================================
+\section{Environment Variables}
+% =================================================================
+
+\subsection{.env file (recommended)}
+
+Create a \texttt{.env} file in the project root. This file is excluded from version control
+via \texttt{.gitignore}.
+
+\begin{lstlisting}[style=shell]
+# .env
+GOOGLE_APPLICATION_CREDENTIALS=C:\Users\Pc\gcp-keys\dlt-loader-key.json
+GCP_PROJECT_ID=dm-torino-airquality
+BQ_MARTS_DATASET=staging_marts
+\end{lstlisting}
+
+\subsection{PowerShell session variables}
+
+Alternatively, export variables for the current terminal session:
+
+\begin{lstlisting}[style=shell]
+$env:GOOGLE_APPLICATION_CREDENTIALS = "C:\Users\Pc\gcp-keys\dlt-loader-key.json"
+$env:GCP_PROJECT_ID                 = "dm-torino-airquality"
+$env:BQ_MARTS_DATASET               = "staging_marts"
+\end{lstlisting}
+
+\subsection{Credential verification}
+
+\begin{lstlisting}[style=shell]
+# Verify credential path is set
+echo $env:GOOGLE_APPLICATION_CREDENTIALS
+
+# Verify the key file exists
+Test-Path "$HOME\gcp-keys\dlt-loader-key.json"
+
+# Quick BigQuery connectivity test
+bq query --use_legacy_sql=false "SELECT 1 AS ok"
+\end{lstlisting}
+
+\begin{tcolorbox}[successbox,title=Expected output]
+\texttt{Test-Path} returns \texttt{True}.
+The \texttt{bq query} returns a table with one row containing \texttt{ok = 1}.
+\end{tcolorbox}
+
+% =================================================================
+\section{Data Acquisition — dlt Pipelines}
+% =================================================================
+
+All three pipelines must be run from the project root with the virtual environment
+activated and environment variables set.
+
+\begin{tcolorbox}[infobox]
+\textbf{Execution order.}
+Run the pipelines in the order shown below.
+The reverse-geocoding pipeline (Step~3) reads from \texttt{staging\_marts.dim\_station},
+which is created by dbt in Section~\ref{sec:dbt}.
+Run Step~3 \textbf{after} the dbt models have been materialised at least once.
+\end{tcolorbox}
+
+\subsection{Pipeline 1 — Open-Meteo weather data}
+
+\textbf{Source:} Open-Meteo Historical Archive API (\url{https://archive-api.open-meteo.com})\\
+\textbf{Destination:} \texttt{raw.weather\_torino\_hourly}\\
+\textbf{Records loaded:} 26\,328 hourly observations
+
+\begin{lstlisting}[style=shell]
+.\.venv\Scripts\python.exe dlt_pipelines\open_meteo.py
+\end{lstlisting}
+
+\textbf{Key parameters hardcoded in the pipeline:}
+
+\begin{table}[h!]
+\centering\small
+\rowcolors{2}{lightbg}{white}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Parameter} & \textbf{Value} \\
+\midrule
+Latitude  & 45.0703 (Torino) \\
+Longitude & 7.6869 (Torino) \\
+Start date & 2022-09-15 \\
+End date   & 2024-12-31 \\
+Variables  & temperature\_2m, relative\_humidity\_2m, precipitation, wind\_speed\_10m, wind\_direction\_10m, surface\_pressure \\
+Timezone   & Europe/Berlin \\
+Write mode & replace \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{tcolorbox}[successbox,title=Expected terminal output]
+\texttt{[open\_meteo] Ricevute 26328 ore di dati}\\
+\texttt{Pipeline open\_meteo\_torino load step completed ...}\\
+\texttt{LOADED}
+\end{tcolorbox}
+
+\subsection{Pipeline 2 — EEA DiscoData air-quality statistics}
+
+\textbf{Source:} EEA DiscoData SQL endpoint (\url{https://discodata.eea.europa.eu})\\
+\textbf{Destination:} \texttt{raw.air\_quality\_statistics\_torino}\\
+\textbf{Records loaded:} 669 annual records
+
+\begin{lstlisting}[style=shell]
+.\.venv\Scripts\python.exe dlt_pipelines\eea_discodata.py
+\end{lstlisting}
+
+\textbf{SQL filter applied by the pipeline:}
+
+\begin{lstlisting}[style=sql]
+WHERE Countrycode = 'IT'
+  AND City        = 'Torino'
+  AND AirPollutant IN ('PM10', 'NO2', 'PM2.5', 'O3')
+  AND ReportingYear BETWEEN 2022 AND 2024
+\end{lstlisting}
+
+\textbf{Primary key:} \texttt{(station\_code, sampling\_point, pollutant, aggregation\_process\_id, reporting\_year)}
+
+\begin{tcolorbox}[successbox,title=Expected terminal output]
+\texttt{[eea\_discodata] Ricevuti 669 record}\\
+\texttt{Pipeline eea\_discodata\_torino load step completed ...}\\
+\texttt{LOADED}
+\end{tcolorbox}
+
+\subsection{Pipeline 3 — Reverse geocoding (Nominatim / OSM}
+\label{sec:geocoding}
+
+\textbf{Source:} Nominatim OpenStreetMap reverse geocoding API\\
+\textbf{Input:} \texttt{staging\_marts.dim\_station} (requires dbt to have run first)\\
+\textbf{Destination:} \texttt{raw.station\_reverse\_geocoding}\\
+\textbf{Records loaded:} 4 stations
+
+\begin{lstlisting}[style=shell]
+.\.venv\Scripts\python.exe dlt_pipelines\station_reverse_geocoding.py
+\end{lstlisting}
+
+\textbf{Rate-limiting:} the pipeline respects Nominatim's policy of~1 request/second and
+uses the custom user-agent \texttt{dm-torino-airquality-project/1.0}.
+
+\begin{tcolorbox}[successbox,title=Expected terminal output]
+\texttt{[reverse\_geocoding] Chiamo Nominatim per IT0469A}\\
+\texttt{[reverse\_geocoding] Chiamo Nominatim per IT0470A}\\
+\texttt{[reverse\_geocoding] Chiamo Nominatim per IT1877A}\\
+\texttt{[reverse\_geocoding] Chiamo Nominatim per IT2168A}\\
+\texttt{LOADED}
+\end{tcolorbox}
+
+% =================================================================
+\section{Transformation Layer — dbt}
+\label{sec:dbt}
+% =================================================================
+
+\subsection{dbt profile configuration}
+
+The dbt profile must be defined in \texttt{\%USERPROFILE\%\textbackslash .dbt\textbackslash profiles.yml}.
+
+\begin{lstlisting}[style=shell,language={}]
+dm_torino_airquality:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      project: dm-torino-airquality
+      dataset: staging_marts
+      location: europe-west8
+      keyfile: C:\Users\Pc\gcp-keys\dlt-loader-key.json
+      threads: 4
+      timeout_seconds: 300
+\end{lstlisting}
+
+\subsection{Running dbt models}
+
+Move to the dbt project directory and run all models:
+
+\begin{lstlisting}[style=shell]
+Set-Location dbt_project
+
+# Test connectivity
+..\.venv\Scripts\dbt.exe debug
+
+# Run all models (staging + marts)
+..\.venv\Scripts\dbt.exe run
+
+# Run all schema tests
+..\.venv\Scripts\dbt.exe test
+
+# Return to project root
+Set-Location ..
+\end{lstlisting}
+
+\subsection{Model materialisation summary}
+
+\begin{table}[h!]
+\centering
+\caption{dbt model inventory}
+\small
+\rowcolors{2}{lightbg}{white}
+\begin{tabularx}{\textwidth}{@{}lllX@{}}
+\toprule
+\textbf{Layer} & \textbf{Model} & \textbf{Type} & \textbf{Description} \\
+\midrule
+Staging & stg\_air\_quality\_statistics\_torino & view  & Cleaned EEA records \\
+Staging & stg\_weather\_torino\_hourly          & view  & Cleaned hourly weather \\
+Staging & stg\_station\_reverse\_geocoding      & view  & Cleaned geocoding results \\
+\midrule
+Mart & dim\_station                         & table & Station dimension \\
+Mart & fact\_air\_quality\_annual           & table & Annual PM10/NO2 KPIs per station \\
+Mart & mart\_station\_type\_year\_summary   & table & KPIs aggregated by type and year \\
+Mart & fact\_weather\_yearly               & table & Yearly weather aggregates \\
+Mart & mart\_air\_quality\_weather\_yearly  & table & Air-quality enriched with weather \\
+Mart & dim\_station\_enriched              & table & Stations enriched with geocoded address \\
+Mart & dq\_reverse\_geocoding\_quality     & table & Spatial integration quality metrics \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Quality test results}
+
+\begin{tcolorbox}[successbox,title=Expected dbt test output]
+\texttt{Completed successfully}\\
+\texttt{Done. PASS=30 WARN=0 ERROR=0 SKIP=0 TOTAL=30}
+\end{tcolorbox}
+
+\begin{table}[h!]
+\centering
+\caption{dbt test coverage by dimension}
+\small
+\rowcolors{2}{lightbg}{white}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Dimension} & \textbf{Test type} & \textbf{Result} \\
+\midrule
+Completeness & \texttt{not\_null}         & \textcolor{accentgreen}{\bfseries 30 / 30 PASS} \\
+Uniqueness   & \texttt{unique}            & \textcolor{accentgreen}{\bfseries 30 / 30 PASS} \\
+Validity     & \texttt{accepted\_values}  & \textcolor{accentgreen}{\bfseries 30 / 30 PASS} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% =================================================================
+\section{Analytical SQL Queries}
+% =================================================================
+
+All queries in the \texttt{queries/} directory target the
+\texttt{raw.air\_quality\_statistics\_torino} table.
+Run them from the project root using the \texttt{bq} CLI:
+
+\begin{lstlisting}[style=shell]
+# Recommended: pipe the file to bq (avoids multiline quoting issues)
+Get-Content -Raw .\queries\annual_means_by_station.sql |
+  bq query --use_legacy_sql=false
+\end{lstlisting}
+
+\begin{table}[h!]
+\centering
+\caption{Available SQL query files}
+\small
+\begin{tabularx}{\textwidth}{@{}lX@{}}
+\toprule
+\textbf{File} & \textbf{Description} \\
+\midrule
+\texttt{annual\_means\_by\_station.sql}             & Annual PM10 and NO2 mean by station, pollutant, and year \\
+\texttt{annual\_means\_by\_station\_type.sql}       & Annual PM10 and NO2 mean aggregated by station type \\
+\texttt{air\_quality\_station\_year\_summary.sql}   & Full KPI summary by station and year \\
+\texttt{air\_quality\_station\_type\_year\_summary.sql} & Full KPI summary by station type and year \\
+\texttt{pm10\_exceedances\_by\_station.sql}         & PM10 exceedance days by station and year \\
+\texttt{pm10\_exceedances\_by\_station\_type.sql}   & PM10 exceedance days aggregated by station type \\
+\texttt{check\_air\_quality\_count.sql}             & Row count verification query \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\textbf{Example — annual means by station:}
+
+\begin{lstlisting}[style=sql]
+SELECT
+  station_code, station_type, station_area,
+  pollutant, reporting_year,
+  pollution_level AS annual_mean_ugm3,
+  data_coverage
+FROM raw.air_quality_statistics_torino
+WHERE aggregation_process_id = 'P1Y'
+  AND unit = 'ug/m3'
+  AND pollutant IN ('PM10', 'NO2')
+ORDER BY station_code, pollutant, reporting_year;
+\end{lstlisting}
+
+% =================================================================
+\section{Dashboard Execution}
+% =================================================================
+
+\subsection{Dependencies}
+
+Install the dashboard-specific requirements if not already done:
+
+\begin{lstlisting}[style=shell]
+.\.venv\Scripts\pip.exe install `
+  -r dashboard_streamlit_v2\dashboard_streamlit_v2\requirements.txt
+\end{lstlisting}
+
+\textbf{Dashboard dependencies:}
+
+\begin{lstlisting}[style=shell,language={}]
+streamlit>=1.36
+pandas>=2.0
+plotly>=5.20
+google-cloud-bigquery>=3.20
+db-dtypes>=1.2
+pyarrow>=15.0
+\end{lstlisting}
+
+\subsection{Launch commands}
+
+\textbf{Option A — from the outer dashboard folder (recommended):}
+
+\begin{lstlisting}[style=shell]
+Set-Location dashboard_streamlit_v2
+..\.venv\Scripts\streamlit.exe run app.py
+\end{lstlisting}
+
+\textbf{Option B — absolute path from the project root:}
+
+\begin{lstlisting}[style=shell]
+.\.venv\Scripts\streamlit.exe run `
+  dashboard_streamlit_v2\dashboard_streamlit_v2\app.py
+\end{lstlisting}
+
+\begin{tcolorbox}[successbox,title=Expected output]
+\texttt{Uvicorn server started on 0.0.0.0:8501}\\[4pt]
+Open \url{http://localhost:8501} in your browser.
+\end{tcolorbox}
+
+\subsection{Dashboard structure}
+
+\begin{table}[h!]
+\centering
+\caption{Dashboard pages}
+\small
+\rowcolors{2}{lightbg}{white}
+\begin{tabularx}{\textwidth}{@{}lX@{}}
+\toprule
+\textbf{Page} & \textbf{Content} \\
+\midrule
+Executive Summary         & KPI cards, end-to-end architecture, research questions, appendix \\
+RQ1 — Traffic vs Bkg     & Bar charts and evidence table for NO2 and PM10 by station type \\
+RQ2 — Temporal Evolution & Line charts and year-over-year delta table \\
+RQ3 — PM10 Exceedances   & Grouped horizontal bar charts by station and year \\
+RQ4 — Integration Quality & Geographic table, geocoding quality chart \\
+Conclusions              & 2×2 RQ card grid, compliance snapshot, WHO guideline gap \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Environment variables used by the dashboard}
+
+\begin{table}[h!]
+\centering\small
+\rowcolors{2}{lightbg}{white}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Variable} & \textbf{Default} & \textbf{Used for} \\
+\midrule
+\texttt{GOOGLE\_APPLICATION\_CREDENTIALS} & fallback: \texttt{\%USERPROFILE\%\textbackslash gcp-keys\textbackslash dlt-loader-key.json} & BigQuery auth \\
+\texttt{GCP\_PROJECT\_ID}                 & \texttt{dm-torino-airquality} & BigQuery project \\
+\texttt{BQ\_MARTS\_DATASET}               & \texttt{staging\_marts}       & Target dataset \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% =================================================================
+\section{Complete Reproduction Checklist}
+% =================================================================
+
+\begin{tcolorbox}[infobox]
+Use this checklist to verify that the full pipeline has been reproduced successfully
+before submitting the project deliverables.
+\end{tcolorbox}
+
+\begin{enumerate}[label=\textbf{\arabic*.},leftmargin=28pt]
+  \item[$\square$] Python virtual environment created and activated
+  \item[$\square$] All Python packages installed
+  \item[$\square$] GCP project \texttt{dm-torino-airquality} accessible via \texttt{gcloud}
+  \item[$\square$] BigQuery \texttt{raw} dataset exists in \texttt{europe-west8}
+  \item[$\square$] Service account key present at the configured path
+  \item[$\square$] \texttt{GOOGLE\_APPLICATION\_CREDENTIALS} set correctly
+  \item[$\square$] Pipeline 1 (Open-Meteo) executed — 26\,328 records in \texttt{raw.weather\_torino\_hourly}
+  \item[$\square$] Pipeline 2 (EEA DiscoData) executed — 669 records in \texttt{raw.air\_quality\_statistics\_torino}
+  \item[$\square$] \texttt{dbt run} completed — all 9 models materialised in \texttt{staging\_marts}
+  \item[$\square$] \texttt{dbt test} completed — 30 / 30 tests passed
+  \item[$\square$] Pipeline 3 (Nominatim) executed — 4 records in \texttt{raw.station\_reverse\_geocoding}
+  \item[$\square$] At least two SQL queries executed successfully via \texttt{bq query}
+  \item[$\square$] Dashboard starts at \url{http://localhost:8501} and loads data without errors
+\end{enumerate}
+
+% =================================================================
+\section{Troubleshooting Reference}
+% =================================================================
+
+\begin{table}[h!]
+\centering
+\caption{Common errors and resolutions}
+\small
+\begin{tabularx}{\textwidth}{@{}lXX@{}}
+\toprule
+\textbf{Error} & \textbf{Cause} & \textbf{Resolution} \\
+\midrule
+\texttt{DefaultCredentialsError}
+  & \texttt{GOOGLE\_APPLICATION\_CREDENTIALS} not set or key file missing
+  & Set the environment variable; verify \texttt{Test-Path} returns \texttt{True} \\
+\addlinespace
+\texttt{gcloud not recognised}
+  & Google Cloud SDK not installed
+  & Install from \url{https://cloud.google.com/sdk/docs/install} \\
+\addlinespace
+PowerShell execution policy error
+  & Blocked by Windows policy
+  & \texttt{Set-ExecutionPolicy -Scope CurrentUser RemoteSigned} \\
+\addlinespace
+\texttt{streamlit run app.py} fails
+  & Wrong working directory
+  & Move to \texttt{dashboard\_streamlit\_v2/} and rerun \\
+\addlinespace
+\texttt{bigquery.readsessions.create} error
+  & BQ Storage API permission missing
+  & Dashboard uses \texttt{create\_bqstorage\_client=False}; no action needed \\
+\addlinespace
+\texttt{dbt debug} fails with profile error
+  & \texttt{profiles.yml} not configured
+  & Add the profile to \texttt{\%USERPROFILE\%\textbackslash .dbt\textbackslash profiles.yml} \\
+\addlinespace
+Pipeline 3 fails with station not found
+  & \texttt{dim\_station} mart not yet created
+  & Run \texttt{dbt run} before running the geocoding pipeline \\
+\addlinespace
+\texttt{bq query} multiline SQL error
+  & Newlines break PowerShell variable passing
+  & Use \texttt{Get-Content -Raw | bq query} instead of variable substitution \\
+\addlinespace
+Billing disabled error (403)
+  & GCP project not linked to billing account
+  & Enable billing in the GCP Console for project \texttt{dm-torino-airquality} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% =================================================================
+\section{Project Deliverables Checklist}
+% =================================================================
+
+\begin{tcolorbox}[infobox]
+Before submitting the project, verify that the shared Google Drive folder contains
+all deliverables required by the Data Management course FAQ.
+\end{tcolorbox}
+
+\begin{enumerate}[label=\textbf{\arabic*.},leftmargin=28pt]
+  \item[$\square$] \textbf{Report} — \texttt{DM\_Project\_Report.pdf} (compiled from \texttt{DM\_Project\_Report.tex})
+  \item[$\square$] \textbf{Presentation} — \texttt{DM\_Project\_Presentation.pdf} (compiled from \texttt{DM\_Project\_Presentation.tex})
+  \item[$\square$] \textbf{Operational Guide} — \texttt{Operational\_Guide.pdf} (this document)
+  \item[$\square$] \textbf{Source code} — complete repository or ZIP archive
+  \item[$\square$] \textbf{Data} — documented reproduction instructions or sample exports
+  \item[$\square$] Evidence of dbt tests passing (screenshot or log excerpt)
+\end{enumerate}
+
+\end{document}
 
 \begin{document}
 
