@@ -1,630 +1,208 @@
-% =================================================================
-%  DM_Project_Presentation.tex
-%  Air Quality Assessment in Torino — Beamer Slides
-%  Universita degli Studi di Milano-Bicocca  |  AY 2025-2026
-% =================================================================
-\documentclass[aspectratio=169,10pt]{beamer}
+\documentclass[aspectratio=169]{beamer}
 
-% ---- encoding & language
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
 \usepackage{lmodern}
-\usepackage{microtype}
-
-% ---- layout utilities
-\usepackage{booktabs}
-\usepackage{tabularx}
-\usepackage{array}
-\usepackage{multirow}
-\usepackage{colortbl}
-\usepackage[most]{tcolorbox}
-\usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
-
-% ---- hyperlinks
 \usepackage{hyperref}
+\usepackage{booktabs}
 
-% ---- enumitem (compatible with beamer)
-\usepackage{enumitem}
-\setlist[itemize]{label=\textbullet,leftmargin=16pt,itemsep=3pt}
-
-% ================================================================
-%  COLOUR PALETTE  (mirror of the dashboard)
-% ================================================================
-\definecolor{navyblue}{HTML}{0B1F3A}
-\definecolor{accentblue}{HTML}{1D4ED8}
-\definecolor{softblue}{HTML}{DBEAFE}
-\definecolor{accentgreen}{HTML}{059669}
-\definecolor{softgreen}{HTML}{D1FAE5}
-\definecolor{accentred}{HTML}{DC2626}
-\definecolor{softred}{HTML}{FEE2E2}
-\definecolor{accentamber}{HTML}{B45309}
-\definecolor{mutedgray}{HTML}{64748B}
-\definecolor{bordergray}{HTML}{CBD5E1}
-\definecolor{lightbg}{HTML}{F5F7FB}
-\definecolor{trafficblue}{HTML}{3B82F6}
-\definecolor{backgroundorange}{HTML}{EA580C}
-
-% ================================================================
-%  BEAMER THEME SETUP
-% ================================================================
-\usetheme{default}
+\usetheme{Madrid}
 \usecolortheme{default}
-\usefonttheme{professionalfonts}
 \setbeamertemplate{navigation symbols}{}
-\setbeamertemplate{frametitle continuation}{}
 
-% -- background
-\setbeamercolor{background canvas}{bg=lightbg}
-
-% -- title slide colours
-\setbeamercolor{title}{fg=white}
-\setbeamercolor{subtitle}{fg=softblue}
-\setbeamercolor{author}{fg=softblue}
-\setbeamercolor{institute}{fg=softblue!80}
-\setbeamercolor{date}{fg=softblue!80}
-
-% -- frame title bar
-\setbeamercolor{frametitle}{fg=white,bg=navyblue}
-\setbeamertemplate{frametitle}{%
-  \vspace{3pt}
-  \insertframetitle
-  \ifx\insertframesubtitle\empty\else
-    \\[1pt]{\footnotesize\color{softblue}\insertframesubtitle}
-  \fi
-}
-
-% -- footer
-\setbeamertemplate{footline}{%
-  \begin{beamercolorbox}[wd=\paperwidth,ht=16pt,dp=4pt]{footline}%
-    \hspace{8pt}%
-    {\tiny\color{mutedgray}
-      Universit\`a degli Studi di Milano-Bicocca
-      \textbf{\textperiodcentered}
-      Data Management Project
-      \textbf{\textperiodcentered}
-      Air Quality Assessment in Torino}%
-    \hfill
-    {\tiny\color{mutedgray}\insertframenumber\,/\,\inserttotalframenumber\hspace{6pt}}%
-  \end{beamercolorbox}%
-}
-
-% -- body text
-\setbeamercolor{normal text}{fg=navyblue}
-\setbeamercolor{itemize item}{fg=accentblue}
-\setbeamercolor{itemize subitem}{fg=mutedgray}
-
-% -- block environments
-\setbeamercolor{block title}{fg=white,bg=accentblue}
-\setbeamercolor{block body}{fg=navyblue,bg=softblue}
-\setbeamercolor{block title alerted}{fg=white,bg=accentred}
-\setbeamercolor{block body alerted}{fg=navyblue,bg=softred}
-\setbeamercolor{block title example}{fg=white,bg=accentgreen}
-\setbeamercolor{block body example}{fg=navyblue,bg=softgreen}
-
-% ================================================================
-%  TCOLORBOX STYLES
-% ================================================================
-\tcbset{
-  kpi/.style={
-    enhanced,colback=white,colframe=bordergray,boxrule=0.5pt,
-    left=6pt,right=6pt,top=5pt,bottom=5pt,sharp corners,
-  },
-  rqbox/.style={
-    enhanced,colback=softblue,colframe=accentblue,
-    leftrule=3pt,toprule=0.3pt,bottomrule=0.3pt,rightrule=0.3pt,
-    left=7pt,right=7pt,top=5pt,bottom=5pt,sharp corners,
-    fonttitle=\footnotesize\bfseries\color{accentblue},
-  },
-  answerbox/.style={
-    enhanced,colback=softgreen,colframe=accentgreen,
-    leftrule=3pt,toprule=0.3pt,bottomrule=0.3pt,rightrule=0.3pt,
-    left=7pt,right=7pt,top=5pt,bottom=5pt,sharp corners,
-    fonttitle=\footnotesize\bfseries\color{accentgreen},
-  },
-}
-
-% ================================================================
-%  TITLE SLIDE TEMPLATE (custom dark cover)
-% ================================================================
-\setbeamertemplate{title page}{%
-\begin{tikzpicture}[remember picture,overlay]
-  % dark background
-  \fill[navyblue] (current page.north west) rectangle (current page.south east);
-  % subtle radial glow
-  \fill[accentblue,opacity=0.18,blur shadow={shadow blur steps=12}]
-    ([xshift=-1cm,yshift=1cm]current page.north east) circle (5.5cm);
-  % kicker line
-  \node[anchor=north west,xshift=1.6cm,yshift=-1.3cm,
-        text=softblue,font=\tiny\bfseries,
-        text width=20cm,inner sep=0pt]
-    at (current page.north west)
-    {UNIVERSIT\`A DEGLI STUDI DI MILANO-BICOCCA
-     \enspace\textbf{\textperiodcentered}\enspace
-     DATA MANAGEMENT PROJECT};
-  % main title
-  \node[anchor=north west,xshift=1.6cm,yshift=-2.2cm,
-        text=white,font=\fontsize{22}{26}\selectfont\bfseries,
-        text width=18cm,inner sep=0pt]
-    at (current page.north west)
-    {Air Quality Assessment in Torino};
-  % subtitle block
-  \node[anchor=north west,xshift=1.6cm,yshift=-3.9cm,
-        text=softblue,font=\normalsize,
-        text width=17cm,inner sep=0pt]
-    at (current page.north west)
-    {Annual PM10 and NO2 analysis across Traffic and Background monitoring stations
-     in Torino, enriched with yearly weather indicators and reverse-geocoded station metadata.};
-  % tag chips
-  \node[anchor=north west,xshift=1.5cm,yshift=-5.8cm,inner sep=0pt]
-    at (current page.north west)
-    {\small
-      \tcbox[on line,colback=accentblue!30,colframe=accentblue,
-             boxrule=0.4pt,left=3pt,right=3pt,top=1pt,bottom=1pt,
-             fontupper=\tiny\bfseries\color{white}]{EEA DiscoData}
-      \;
-      \tcbox[on line,colback=accentblue!30,colframe=accentblue,
-             boxrule=0.4pt,left=3pt,right=3pt,top=1pt,bottom=1pt,
-             fontupper=\tiny\bfseries\color{white}]{Open-Meteo API}
-      \;
-      \tcbox[on line,colback=accentblue!30,colframe=accentblue,
-             boxrule=0.4pt,left=3pt,right=3pt,top=1pt,bottom=1pt,
-             fontupper=\tiny\bfseries\color{white}]{OSM / Nominatim}
-      \;
-      \tcbox[on line,colback=accentblue!30,colframe=accentblue,
-             boxrule=0.4pt,left=3pt,right=3pt,top=1pt,bottom=1pt,
-             fontupper=\tiny\bfseries\color{white}]{BigQuery}
-      \;
-      \tcbox[on line,colback=accentblue!30,colframe=accentblue,
-             boxrule=0.4pt,left=3pt,right=3pt,top=1pt,bottom=1pt,
-             fontupper=\tiny\bfseries\color{white}]{dlt}
-      \;
-      \tcbox[on line,colback=accentblue!30,colframe=accentblue,
-             boxrule=0.4pt,left=3pt,right=3pt,top=1pt,bottom=1pt,
-             fontupper=\tiny\bfseries\color{white}]{dbt}
-      \;
-      \tcbox[on line,colback=accentgreen!60,colframe=accentgreen,
-             boxrule=0.4pt,left=3pt,right=3pt,top=1pt,bottom=1pt,
-             fontupper=\tiny\bfseries\color{white}]{30 dbt tests passed}
-    };
-  % authors & date bottom
-  \node[anchor=south west,xshift=1.6cm,yshift=1.2cm,
-        text=softblue!80,font=\footnotesize,inner sep=0pt]
-    at (current page.south west)
-    {[Student~1] \quad [Student~2] \quad [Student~3]
-     \quad|\quad Universit\`a degli Studi di Milano-Bicocca (UNIMIB)
-     \quad|\quad Academic Year 2025--2026};
-\end{tikzpicture}%
-}
-
-% ================================================================
-%  DOCUMENT METADATA
-% ================================================================
 \title{Air Quality Assessment in Torino}
 \subtitle{Data Management Project Presentation}
 \author{[Student 1] \and [Student 2] \and [Student 3]}
-\institute{Universit\`a degli Studi di Milano-Bicocca (UNIMIB)}
-\date{Academic Year 2025--2026}
+\institute{Universita degli Studi di Milano-Bicocca (UNIMIB)}
+\date{Academic Year 2025-2026\\[insert presentation date]}
 
-% ================================================================
 \begin{document}
-% ================================================================
 
-\begin{frame}[plain]
+\begin{frame}
   \titlepage
 \end{frame}
 
-% ---- AGENDA
 \begin{frame}{Agenda}
-\begin{columns}[T]
-  \column{0.5\textwidth}
-  \begin{itemize}
-    \item Motivation and objectives
-    \item Research questions
-    \item Data sources and acquisition
-    \item Storage and architecture
-    \item Data quality
-  \end{itemize}
-  \column{0.5\textwidth}
-  \begin{itemize}
-    \item Data integration and enrichment
-    \item Results: RQ1 and RQ2
-    \item Results: RQ3 and RQ4
-    \item Dashboard
-    \item Conclusion
-  \end{itemize}
-\end{columns}
-\end{frame}
-
-% ---- MOTIVATION
-\begin{frame}{Motivation}
-\begin{columns}[T]
-  \column{0.6\textwidth}
-  \begin{itemize}
-    \item Air pollution is one of the most significant urban health challenges.
-    \item Torino hosts both \textbf{Traffic} and \textbf{Background} monitoring stations,
-          enabling direct pollutant comparison across station types.
-    \item The project builds a \textbf{reproducible data-management pipeline}, not just
-          a set of static charts.
-    \item Analytical focus: PM10, NO2, exceedance days, integration quality.
-  \end{itemize}
-  \column{0.4\textwidth}
-  \begin{tcolorbox}[kpi]
-    {\tiny\bfseries\color{mutedgray}PIPELINE STAGES}\\[4pt]
-    {\footnotesize
-      1. Acquisition\\
-      2. Storage (BigQuery)\\
-      3. Transformation (dbt)\\
-      4. Integration \& Quality\\
-      5. Analysis \& Dashboard%
-    }
-  \end{tcolorbox}
-\end{columns}
-\end{frame}
-
-% ---- RESEARCH QUESTIONS
-\begin{frame}{Research Questions}
-\begin{tcolorbox}[rqbox,title=RQ1 — Descriptive]
-  How do PM10 and NO2 annual concentrations differ between Traffic and Background stations in 2022--2024?
-\end{tcolorbox}
-\vspace{4pt}
-\begin{tcolorbox}[rqbox,title=RQ2 — Temporal]
-  How do annual PM10 and NO2 indicators evolve between 2022 and 2024 for different station types?
-\end{tcolorbox}
-\vspace{4pt}
-\begin{tcolorbox}[rqbox,title=RQ3 — Exceedance analysis]
-  How do PM10 exceedance days above 50\,\textmu g/m\textsuperscript{3} vary across years and station types?
-\end{tcolorbox}
-\vspace{4pt}
-\begin{tcolorbox}[rqbox,title=RQ4 — Integration and enrichment quality]
-  Can yearly weather indicators and reverse-geocoded station information be integrated with measurable quality?
-\end{tcolorbox}
-\end{frame}
-
-% ---- DATA SOURCES
-\begin{frame}{Data Sources and Acquisition}
-\begin{center}
-\small
-\begin{tabular}{@{}llll@{}}
-\toprule
-\textbf{Source} & \textbf{Provider} & \textbf{Method} & \textbf{Records} \\
-\midrule
-Air-quality statistics  & EEA DiscoData          & HTTP SQL API / dlt  & \textbf{669} \\
-Hourly weather          & Open-Meteo Historical  & REST API / dlt      & \textbf{26\,328} \\
-Station geocoding       & Nominatim / OSM        & REST API / dlt      & \textbf{4} \\
-\bottomrule
-\end{tabular}
-\end{center}
-\vspace{8pt}
-\textbf{Architecture:}
-\begin{center}
-\begin{tikzpicture}[
-  box/.style={draw=accentblue,fill=softblue,rounded corners=3pt,
-              font=\tiny\bfseries\color{navyblue},
-              minimum width=2.4cm,minimum height=0.7cm,text centered},
-  arr/.style={-{Stealth[length=5pt]},accentblue,thick}]
-  \node[box] (src) {External\\Sources};
-  \node[box,right=0.8cm of src] (dlt) {dlt\\Ingestion};
-  \node[box,right=0.8cm of dlt] (bq) {BigQuery\\Raw};
-  \node[box,right=0.8cm of bq] (dbt) {dbt\\Marts};
-  \node[box,right=0.8cm of dbt] (dash) {Streamlit\\Dashboard};
-  \draw[arr] (src) -- (dlt);
-  \draw[arr] (dlt) -- (bq);
-  \draw[arr] (bq) -- (dbt);
-  \draw[arr] (dbt) -- (dash);
-\end{tikzpicture}
-\end{center}
-\end{frame}
-
-% ---- STORAGE
-\begin{frame}{Storage and Database Design}
-\begin{columns}[T]
-  \column{0.46\textwidth}
-  \textbf{Technology choices}
-  \vspace{4pt}
-  \begin{itemize}
-    \item \textbf{BigQuery}: scalable analytical DBMS
-    \item \textbf{dbt}: versioned models + declarative tests
-    \item \textbf{dlt}: pipeline-as-code ingestion
-    \item \textbf{Streamlit + Plotly}: presentation layer
-  \end{itemize}
-
-  \column{0.54\textwidth}
-  \textbf{Mart layer}
-  \vspace{3pt}
-
-  {\small
-  \begin{tabular}{@{}ll@{}}
-  \toprule
-  \textbf{Model} & \textbf{Purpose} \\
-  \midrule
-  dim\_station                     & Station dimension \\
-  fact\_air\_quality\_annual       & Annual KPIs per station \\
-  mart\_station\_type\_year\_summary & KPIs by type \& year \\
-  mart\_air\_quality\_weather\_yearly & Weather enrichment \\
-  dim\_station\_enriched           & Geocoded addresses \\
-  dq\_reverse\_geocoding\_quality  & Quality metrics \\
-  \bottomrule
-  \end{tabular}}
-\end{columns}
-\end{frame}
-
-% ---- DATA QUALITY
-\begin{frame}{Data Quality}
-\begin{columns}[T]
-  \column{0.5\textwidth}
-  \textbf{dbt test coverage}
-  \vspace{4pt}
-
-  {\small
-  \begin{tabular}{@{}lll@{}}
-  \toprule
-  \textbf{Dimension} & \textbf{Test} & \textbf{Result} \\
-  \midrule
-  Completeness & not\_null         & \textcolor{accentgreen}{\bfseries PASS} \\
-  Uniqueness   & unique            & \textcolor{accentgreen}{\bfseries PASS} \\
-  Validity     & accepted\_values  & \textcolor{accentgreen}{\bfseries PASS} \\
-  Enrichment   & accepted\_values  & \textcolor{accentgreen}{\bfseries PASS} \\
-  \midrule
-  \multicolumn{2}{l}{\textbf{Total}} & \textbf{30 / 30} \\
-  \bottomrule
-  \end{tabular}}
-
-  \column{0.5\textwidth}
-  \begin{tcolorbox}[answerbox,title=Enrichment quality metrics]
-  {\footnotesize
-  \begin{tabular}{@{}ll@{}}
-  Weather success      & \textbf{100\%} \\
-  Geocoding coverage   & \textbf{100\%} \\
-  Avg distance         & \textbf{27.09 m} \\
-  Max distance         & \textbf{55.34 m} \\
-  Stations $<$ 100\,m  & \textbf{100\%} \\
-  \end{tabular}}
-  \end{tcolorbox}
-\end{columns}
-\end{frame}
-
-% ---- INTEGRATION
-\begin{frame}{Data Integration and Enrichment}
-\begin{columns}[T]
-  \column{0.5\textwidth}
-  \textbf{Weather enrichment}
-  \begin{itemize}
-    \item Joins yearly weather to annual air-quality facts
-    \item Fully automated in dbt (\texttt{mart\_air\_quality\_weather\_yearly})
-    \item Success rate: \textbf{100\%}
-  \end{itemize}
-  \vspace{8pt}
-  \textbf{Spatial enrichment}
-  \begin{itemize}
-    \item Nominatim reverse-geocodes all 4 stations
-    \item Haversine error measured for each station
-    \item All within the 100\,m target
-  \end{itemize}
-
-  \column{0.5\textwidth}
-  {\small
-  \begin{tabular}{@{}lrr@{}}
-  \toprule
-  \textbf{Station} & \textbf{Type} & \textbf{Error (m)} \\
-  \midrule
-  IT0469A & Traffic    &  0.60 \\
-  IT0470A & Traffic    & 25.97 \\
-  IT1877A & Background & 26.44 \\
-  IT2168A & Background & 55.34 \\
-  \bottomrule
-  \end{tabular}}
-\end{columns}
-\end{frame}
-
-% ---- RQ1 + RQ2
-\begin{frame}{RQ1 and RQ2 — Concentrations and Trends}
-\begin{columns}[T]
-  \column{0.55\textwidth}
-  \textbf{Annual means (\textmu g/m\textsuperscript{3})}
-  \vspace{4pt}
-
-  {\small
-  \rowcolors{2}{softblue!30}{white}
-  \begin{tabular}{@{}llrr@{}}
-  \toprule
-  \textbf{Type} & \textbf{Year} & \textbf{NO2} & \textbf{PM10} \\
-  \midrule
-  Background & 2022 & 29.35 & 30.21 \\
-  Traffic    & 2022 & \textbf{44.69} & \textbf{35.10} \\
-  Background & 2023 & 29.38 & 25.41 \\
-  Traffic    & 2023 & \textbf{39.16} & \textbf{32.23} \\
-  Background & 2024 & 27.77 & 22.47 \\
-  Traffic    & 2024 & \textbf{38.59} & \textbf{28.71} \\
-  \bottomrule
-  \end{tabular}}
-
-  \column{0.45\textwidth}
-  \begin{tcolorbox}[answerbox,title=Direct answer — RQ1]
-  {\footnotesize
-  Traffic stations show higher PM10 and NO2 in every year.
-  In 2024: NO2 gap = \textbf{+10.82\,\textmu g/m\textsuperscript{3}}
-  in favour of Background.}
-  \end{tcolorbox}
-  \vspace{6pt}
-  \begin{tcolorbox}[answerbox,title=Direct answer — RQ2]
-  {\footnotesize
-  PM10 decreases for both types over 2022--2024.
-  NO2 also declines but remains close to the
-  EU limit at Traffic stations.}
-  \end{tcolorbox}
-\end{columns}
-\end{frame}
-
-% ---- RQ3 + RQ4
-\begin{frame}{RQ3 and RQ4 — Exceedances and Quality}
-\begin{columns}[T]
-  \column{0.52\textwidth}
-  \textbf{PM10 exceedance days (EU limit: 35/year)}
-  \vspace{4pt}
-
-  {\small
-  \rowcolors{2}{softblue!30}{white}
-  \begin{tabular}{@{}llrrr@{}}
-  \toprule
-  \textbf{Station} & \textbf{Type} & \textbf{2022} & \textbf{2023} & \textbf{2024} \\
-  \midrule
-  IT0469A & Traffic    & 57 & 53 & 34 \\
-  IT0470A & Traffic    & 86 & 63 & 55 \\
-  IT1877A & Background & 58 & 37 & 41 \\
-  IT2168A & Background & 37 & 19 & 37 \\
-  \midrule
-  \textbf{Traffic avg}    & & \textbf{71.5} & \textbf{58.0} & \textbf{44.5} \\
-  \textbf{Bkg avg}        & & \textbf{47.5} & \textbf{28.0} & \textbf{39.0} \\
-  \bottomrule
-  \end{tabular}}
-
-  \column{0.48\textwidth}
-  \begin{tcolorbox}[answerbox,title=Direct answer — RQ3]
-  {\footnotesize
-  Traffic stations exceed the EU 35-day limit every year.
-  Background exceeds in 2022 and 2024 only.}
-  \end{tcolorbox}
-  \vspace{6pt}
-  \begin{tcolorbox}[answerbox,title=Direct answer — RQ4]
-  {\footnotesize
-  Yes. Weather enrichment success = \textbf{100\%};
-  Geocoding coverage = \textbf{100\%};
-  Max spatial error = \textbf{55.34\,m}.
-  30 dbt tests passed.}
-  \end{tcolorbox}
-\end{columns}
-\end{frame}
-
-% ---- COMPLIANCE
-\begin{frame}{Compliance Snapshot}
-\begin{center}
-\small
-\rowcolors{2}{softblue!20}{white}
-\begin{tabular}{@{}llll@{}}
-\toprule
-\textbf{Metric} & \textbf{Limit} & \textbf{Traffic} & \textbf{Background} \\
-\midrule
-NO2 annual mean      & EU 40\,\textmu g/m\textsuperscript{3}  & Near/above (2022) & Compliant all years \\
-PM10 annual mean     & EU 40\,\textmu g/m\textsuperscript{3}  & Compliant all years & Compliant all years \\
-PM10 exceedance days & EU $\leq$35 days  & \textcolor{accentred}{\bfseries Exceeds all years} & Exceeds 2022 \& 2024 \\
-NO2 annual mean      & WHO 10\,\textmu g/m\textsuperscript{3} & \textcolor{accentred}{\bfseries Exceeds all years} & \textcolor{accentred}{\bfseries Exceeds all years} \\
-PM10 annual mean     & WHO 15\,\textmu g/m\textsuperscript{3} & \textcolor{accentred}{\bfseries Exceeds all years} & \textcolor{accentred}{\bfseries Exceeds all years} \\
-\bottomrule
-\end{tabular}
-\end{center}
-\end{frame}
-
-% ---- DASHBOARD
-\begin{frame}{Streamlit Dashboard}
-\begin{columns}[T]
-  \column{0.5\textwidth}
-  \textbf{Structure}
-  \begin{itemize}
-    \item Executive Summary with KPI cards
-    \item One page per research question
-    \item Evidence tables and direct answers
-    \item Data-quality metrics page (FAQ 7 \& 9)
-    \item Conclusions with compliance table
-  \end{itemize}
-  \column{0.5\textwidth}
-  \textbf{Technical stack}
-  \begin{itemize}
-    \item Python + Streamlit + Plotly
-    \item Data sourced directly from BigQuery marts
-    \item Sidebar filters: year and station type
-    \item Grouped bar charts, line charts, horizontal bar charts
-    \item Credential auto-detection with fallback
-  \end{itemize}
-\end{columns}
-\end{frame}
-
-% ---- REPRODUCIBILITY
-\begin{frame}{Reproducibility}
-\begin{columns}[T]
-  \column{0.5\textwidth}
-  \textbf{What is fully codified}
-  \begin{itemize}
-    \item 3 Python dlt pipelines (API ingestion)
-    \item BigQuery raw + mart layer
-    \item dbt models and 30 schema tests
-    \item 6 SQL analytical query files
-    \item Streamlit dashboard with launcher
-    \item Operational Guide (separate document)
-  \end{itemize}
-  \column{0.5\textwidth}
-  \textbf{Environment setup}
-  \begin{itemize}
-    \item GCP project: dm-torino-airquality
-    \item Region: europe-west8
-    \item Auth: GOOGLE\_APPLICATION\_CREDENTIALS
-    \item Dataset: staging\_marts
-  \end{itemize}
-\end{columns}
-\end{frame}
-
-% ---- LIMITATIONS
-\begin{frame}{Limitations and Future Work}
-\begin{columns}[T]
-  \column{0.5\textwidth}
-  \textbf{Current limitations}
-  \begin{itemize}
-    \item Annual granularity only
-    \item Limited to 4 Torino stations
-    \item Descriptive analysis (no causal inference)
-    \item Weather enrichment is annual
-  \end{itemize}
-  \column{0.5\textwidth}
-  \textbf{Future improvements}
-  \begin{itemize}
-    \item Daily/hourly ARPA data
-    \item Extend to other Italian cities
-    \item Add road traffic or land-use datasets
-    \item Track quality metrics historically
-  \end{itemize}
-\end{columns}
-\end{frame}
-
-% ---- CONCLUSION
-\begin{frame}{Conclusion}
-\begin{tcolorbox}[answerbox,title=End-to-end pipeline phases covered]
-{\footnotesize
-Acquisition $\rightarrow$ Storage $\rightarrow$
-Profiling $\rightarrow$ Integration $\rightarrow$
-Analysis $\rightarrow$ Quality improvement}
-\end{tcolorbox}
-
-\vspace{6pt}
-\textbf{Key findings:}
 \begin{itemize}
-  \item Traffic stations consistently show worse air-quality indicators than Background stations.
-  \item PM10 annual means decrease over 2022--2024 for both station types.
-  \item PM10 exceedance days exceed the EU limit at Traffic stations every year.
-  \item Weather and spatial enrichment integrate with full coverage and controlled error.
-  \item All stations exceed WHO AQG 2021 thresholds for both PM10 and NO2.
+  \item Motivation and objectives
+  \item Research questions
+  \item Data sources and acquisition
+  \item Storage and database design
+  \item Data quality and integration
+  \item Analysis and dashboard
+  \item Reproducibility
+  \item Limitations and future work
+  \item Conclusion
 \end{itemize}
 \end{frame}
 
-% ---- CLOSING
-\begin{frame}[plain]
-\begin{tikzpicture}[remember picture,overlay]
-  \fill[navyblue] (current page.north west) rectangle (current page.south east);
-  \node[text=white,font=\fontsize{22}{28}\selectfont\bfseries]
-    at (current page.center) {Thank you!};
-  \node[text=softblue,font=\large,yshift=-1.6cm]
-    at (current page.center) {Questions?};
-  \node[anchor=south,yshift=0.6cm,text=softblue!70,font=\tiny]
-    at (current page.south)
-    {Universit\`a degli Studi di Milano-Bicocca
-     \textbf{\textperiodcentered}
-     Data Management Project
-     \textbf{\textperiodcentered}
-     Air Quality Assessment in Torino};
-\end{tikzpicture}
+\begin{frame}{Motivation}
+\begin{itemize}
+  \item Air pollution is a relevant urban and public-health issue.
+  \item Torino is a useful case because it includes both Traffic and Background monitoring stations.
+  \item The goal is not only to visualize results, but to build a reproducible data-management pipeline.
+  \item The project studies PM10, NO2, exceedance days, and integration quality.
+\end{itemize}
 \end{frame}
 
-\end{document}
+\begin{frame}{Objectives}
+\begin{itemize}
+  \item Acquire heterogeneous datasets automatically.
+  \item Store them in a DBMS suitable for analytical querying.
+  \item Transform and validate them through a reproducible workflow.
+  \item Integrate weather and spatial enrichment into the analytical warehouse.
+  \item Answer four research questions through SQL and Streamlit.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Research Questions}
+\begin{itemize}
+  \item RQ1: How do PM10 and NO2 annual concentrations differ between Traffic and Background stations in 2022--2024?
+  \item RQ2: How do annual PM10 and NO2 indicators evolve over time?
+  \item RQ3: How do PM10 exceedance days above 50 ug/m\textsuperscript{3} vary by year and station type?
+  \item RQ4: Can weather and reverse-geocoded station information be integrated with measurable quality?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Data Sources}
+\begin{columns}[T]
+  \column{0.33\textwidth}
+  \textbf{EEA DiscoData}
+  \begin{itemize}
+    \item annual PM10 and NO2 indicators
+    \item 669 loaded records
+  \end{itemize}
+
+  \column{0.33\textwidth}
+  \textbf{Open-Meteo}
+  \begin{itemize}
+    \item hourly weather observations
+    \item 26,328 loaded records
+  \end{itemize}
+
+  \column{0.33\textwidth}
+  \textbf{Nominatim / OSM}
+  \begin{itemize}
+    \item reverse geocoding
+    \item spatial enrichment and error measurement
+  \end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Acquisition Strategy}
+\begin{itemize}
+  \item Three automated Python dlt pipelines.
+  \item API-based ingestion for all sources.
+  \item Raw tables loaded into BigQuery.
+  \item Repeatable execution through environment variables and cloud credentials.
+\end{itemize}
+
+\vspace{0.4cm}
+Suggested visual: APIs $\rightarrow$ dlt $\rightarrow$ BigQuery raw.
+\end{frame}
+
+\begin{frame}{Storage and Architecture}
+\begin{itemize}
+  \item Storage layer: Google BigQuery
+  \item Transformation layer: dbt
+  \item Presentation layer: Streamlit
+  \item Query layer: SQL files in the repository
+\end{itemize}
+
+\vspace{0.3cm}
+Main analytical tables:
+\begin{itemize}
+  \item fact\_air\_quality\_annual
+  \item mart\_station\_type\_year\_summary
+  \item mart\_air\_quality\_weather\_yearly
+  \item dim\_station\_enriched
+  \item dq\_reverse\_geocoding\_quality
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Data Quality}
+\begin{itemize}
+  \item Completeness: key fields tested with \texttt{not\_null}
+  \item Uniqueness: station keys tested with \texttt{unique}
+  \item Validity: accepted station types and enrichment flags
+  \item Automated evidence: 30 dbt tests passed
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Data Integration and Enrichment}
+\begin{itemize}
+  \item Weather enrichment joins yearly weather indicators to annual air-quality facts.
+  \item Spatial enrichment reverse-geocodes monitoring stations.
+  \item Integration is fully automated in the warehouse pipeline.
+  \item Error is measured explicitly, not only described.
+\end{itemize}
+
+\vspace{0.3cm}
+Key metrics:
+\begin{itemize}
+  \item weather enrichment success: 100\%
+  \item geocoding coverage: 100\%
+  \item average geocoding distance: 27.09 m
+  \item maximum geocoding distance: 55.34 m
+\end{itemize}
+\end{frame}
+
+\begin{frame}{RQ1 and RQ2 Results}
+\begin{itemize}
+  \item Traffic stations consistently show worse pollutant values than Background stations.
+  \item In 2024, NO2 is 38.59 ug/m\textsuperscript{3} for Traffic vs 27.77 ug/m\textsuperscript{3} for Background.
+  \item PM10 decreases between 2022 and 2024 for both station types.
+  \item NO2 also declines, but remains close to the EU limit at Traffic stations.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{RQ3 Results}
+\begin{itemize}
+  \item PM10 exceedance days are higher at Traffic stations in every observed year.
+  \item 2022: 71.5 vs 47.5
+  \item 2023: 58.0 vs 28.0
+  \item 2024: 44.5 vs 39.0
+  \item The EU maximum of 35 days is exceeded systematically at Traffic stations.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{RQ4 Results}
+\begin{itemize}
+  \item Weather and spatial enrichment were integrated successfully.
+  \item Reverse geocoding covered all stations.
+  \item Quality remained controlled, with low measured spatial error.
+  \item The project satisfies the FAQ requirement on automated enrichment and error measurement.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Dashboard}
+\begin{itemize}
+  \item Streamlit dashboard organized by executive summary and research-question pages.
+  \item KPI cards, evidence tables, and presentation-ready charts.
+  \item Built directly on BigQuery marts.
+  \item Useful both for analysis and for oral presentation support.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Reproducibility}
+\begin{itemize}
+  \item Source code versioned in the repository.
+  \item Pipelines implemented in Python.
+  \item Warehouse modeled in BigQuery.
+  \item Transformations and tests implemented in dbt.
+  \item Analytical queries stored as SQL files.
+  \item Dashboard launchable through Streamlit.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Limitations}
+\begin{itemize}
+  \item Annual air-quality indicators limit temporal granularity.
+  \item The spatial scope is limited to the selected Torino stations.
+  \item The analysis is descriptive, not causal.
+  \item More external contextual datasets could strengthen interpretation.
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Future Work}
